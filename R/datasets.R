@@ -1,6 +1,6 @@
 #' Season summary
 #'
-#' A dataset containing a summary of all 40 seasons of survivor
+#' A dataset containing a summary of all 40 seasons of Survivor
 #'
 #' @format This data frame contains the following columns:
 #' \describe{
@@ -11,7 +11,7 @@
 #'   \item{\code{tribe_setup}}{Initial setup of the tribe e.g. heroes vs Healers vs Hustlers}
 #'   \item{\code{full_name}}{Full name of the winner}
 #'   \item{\code{winner}}{Winner of the season}
-#'   \item{\code{runner_ups}}{Runner ups for the season. Nested data from given there may be 2 runner ups and this preserves the grain of the data being a season}
+#'   \item{\code{runner_ups}}{Runner ups for the season. Either one or two runner ups as a string}
 #'   \item{\code{final_vote}}{Final vote allocation. See the \code{jury_votes} dataset for better aggregation of this data}
 #'   \item{\code{timeslot}}{Timeslot of the show in the US}
 #'   \item{\code{premiered}}{Date the first episode aired}
@@ -72,7 +72,8 @@
 
 #' Reward challenges
 #'
-#' A dataset containing details on the reward challenges for each season
+#' A dataset containing details on the reward challenges for each season,
+#' This holds the same information as the challenges dataset. (superceded by the `challenges` dataset)
 #'
 #' @format This nested tidy data frame contains the following columns:
 #' \describe{
@@ -101,7 +102,8 @@
 
 #' Immunity challenges
 #'
-#' A dataset containing details on the immunity challenges for each season
+#' A dataset containing details on the immunity challenges for each season. This holds the same
+#' information as the challenges dataset. (superseded by the `challenges` dataset)
 #'
 #' @format This nested tidy data frame contains the following columns:
 #' \describe{
@@ -110,7 +112,7 @@
 #'   \item{\code{episode}}{Episode number of the immunity challenge was played}
 #'   \item{\code{title}}{Episode title}
 #'   \item{\code{voted_out}}{The castaway voted out}
-#'   \item{\code{day}}{Day the castway or tribe won the immunity challenge}
+#'   \item{\code{day}}{Day the castaway or tribe won the immunity challenge}
 #'   \item{\code{order}}{Order in which the castaway was voted off the island}
 #'   \item{\code{immunity}}{Winners of the immunity challenge. Nested}
 #' }
@@ -138,6 +140,7 @@
 #'   \item{\code{vote}}{Vote. 0-1 variable for easy summation}
 #' }
 #' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}
+#'
 #' @examples
 #' library(dplyr)
 #' jury_votes %>%
@@ -285,3 +288,94 @@
 #' }
 #' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}
 "season_palettes"
+
+#' Challenges
+#'
+#' A dataset detailing the challenges played including reward and immunity challenges.
+#' Note: The intention is for this dataset to ultimately replace the individual
+#' \code{immunity} and \code{rewards} datasets.
+#'
+#' @format This nested data frame contains the following columns:
+#' \describe{
+#'   \item{\code{season_name}}{The season name}
+#'   \item{\code{season}}{The season number}
+#'   \item{\code{episode}}{Episode number}
+#'   \item{\code{title}}{Episode title}
+#'   \item{\code{day}}{The day of the tribal council}
+#'   \item{\code{challenge_type}}{The challenge type e.g. immunity, reward, etc}
+#'   \item{\code{winners}}{The list of winners. Either the list of people in the tribe which won, list of people that participated on the reward or the individual winner}
+#'   \item{\code{winning_tribe}}{Name of the winner tribe. \code{NA} during the merge}
+#' }
+#'
+#' @details A nested tidy data frame of immunity and reward challenge results. The
+#' winners and winning tribe of the challenge are found by expanding the `winners`
+#' column. For individual immunity challenges the winning tribe is simply `NA`.
+#'
+#' Typically in the merge if a single person win a reward they are allowed to bring
+#' others along with them. The first castaway in the expanded list is likely to be the
+#' winner and the subsequent players those they brought along with them. Although,
+#' not always. Occasionally in the merge the castaways are split into two teams for
+#' the purpose of the reward, in which case all castaways win the reward rather than
+#' a single person.
+#'
+#' The `day` field on this data set represents the day of the tribal council rather
+#' than the day of the challenge. This is to more easily associate the reward challenge
+#' with the immunity challenge and result of the tribal council. It also helps for
+#' joining tables.
+#'
+#' Note the challenges table is the combined immunity and rewards tables which will
+#' eventually be dropped in later releases.
+#'
+#' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}
+#' @examples
+#' library(dplyr)
+#' library(tidyr)
+#' challenges %>%
+#'   filter(season == 40) %>%
+#'   unnest(winners)
+"challenges"
+
+#' Tribe mapping
+#'
+#' A mapping for castaways to tribes for each day (day being the day of the tribal council)
+#' This is useful for observing who is on what tribe throughout the game.
+#'
+#' @format This data frame contains the following columns:
+#' \describe{
+#'   \item{\code{season_name}}{The season name}
+#'   \item{\code{season}}{The season number}
+#'   \item{\code{day}}{The day of the tribal council}
+#'   \item{\code{castaway}}{Name of the castaway}
+#'   \item{\code{tribe}}{Name of the tribe the castaway was on}
+#' }
+#'
+#' @details Each season by day holds a complete list of castaways still in the game and
+#' which tribe they are on. Moving through each day you can observe the changes in
+#' the tribe. For example the first day (usual day 2) has all castaways mapped to their
+#' original tribe. The next day has the same minus the castaway just voted out. This
+#' is useful for observing the changes in tribe make either due to castaways being voted
+#' off the island, tribe swaps or otherwise.
+#'
+#' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}
+"tribe_mapping"
+
+#' Hidden Immunity Idols
+#'
+#' A dataset containing the history of hidden immunity idols including who found them,
+#' on what day and which day they were played.
+#'
+#' @format This data frame contains the following columns:
+#' \describe{
+#'   \item{\code{season_name}}{The season name}
+#'   \item{\code{season}}{The season number}
+#'   \item{\code{castaway}}{Name of the castaway}
+#'   \item{\code{idol_number}}{Indicates whether it is the first, second, etc idol found in the season}
+#'   \item{\code{idols_held}}{The number of idols held by the castaway}
+#'   \item{\code{votes_nullified}}{The number of votes nullified by the idol}
+#'   \item{\code{day_found}}{The day the idol was found}
+#'   \item{\code{day_played}}{The day of the tribal council}
+#'   \item{\code{legacy_advantage}}{If the idol was a legacy advantage or not}
+#' }
+#'
+#' @source \url{https://survivor.fandom.com/wiki/Hidden_Immunity_Idol}
+"hidden_idols"
