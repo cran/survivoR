@@ -48,13 +48,14 @@
 #'   \item{\code{city}}{City of residence during the season they played}
 #'   \item{\code{state}}{State of residence during the season they played}
 #'   \item{\code{personality_type}}{The Myer-Briggs personality type of the castaway}
+#'   \item{\code{episode}}{Episode number}
 #'   \item{\code{day}}{Number of days the castaway survived. A missing value indicates they later returned to the game that season}
 #'   \item{\code{order}}{Order in which castaway was voted out e.g. 5 is the 5th person voted of the island}
 #'   \item{\code{result}}{Final result}
 #'   \item{\code{jury_status}}{Jury status}
 #'   \item{\code{original_tribe}}{Original tribe name}
 #'   \item{\code{swapped_tribe}}{Swapped tribe name}
-#'   \item{\code{swapped_tribe2}}{Second swapped tribe in the event of a second tribe swap or other tribe restructure such as absorbed tribe, outcasts, etc}
+#'   \item{\code{swapped_tribe_2}}{Second swapped tribe in the event of a second tribe swap or other tribe restructure such as absorbed tribe, outcasts, etc}
 #'   \item{\code{merged_tribe}}{Merged tribe name}
 #'   \item{\code{total_votes_received}}{Total number of tribal votes received during the main game for a given season
 #'   (not overall for those who have played more than once). This includes votes from ties}
@@ -70,64 +71,6 @@
 #' castaways %>%
 #'   filter(season == 40)
 "castaways"
-
-
-#' Reward challenges (deprecated)
-#'
-#' A dataset containing details on the reward challenges for each season,
-#' This holds the same information as the challenges dataset. (superceded by the `challenges` dataset)
-#'
-#' @format This nested tidy data frame contains the following columns:
-#' \describe{
-#'   \item{\code{season_name}}{Season name}
-#'   \item{\code{season}}{Sesaon number}
-#'   \item{\code{episode}}{Episode number of when the reward challenge was played}
-#'   \item{\code{title}}{Episode title}
-#'   \item{\code{day}}{Day of the immunity challenge rather than the reward (to be updated)}
-#'   \item{\code{Reward}}{Winners of the reward challenge. Tidy data frame. See details for more}
-#' }
-#' @details This is a nested data frame since more than one person can win the reward.
-#' The list of castaways include all those that participated in the reward rather than simply
-#' the castaway that won the challenge. Many challenges in the merge are such that there is
-#' one winner of the challenge and they can choose a set number of people to join them. Typically
-#' the first person on the list is the person who won the challenge and other just participated
-#' in the reward. In the case where castaways were split into teams for the challenge (post merge),
-#' technically they all won.
-#' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}
-#' @examples
-#' library(dplyr)
-#' library(tidyr)
-#' rewards
-#' rewards %>%
-#'   unnest(reward)
-"rewards"
-
-#' Immunity challenges (deprecated)
-#'
-#' A dataset containing details on the immunity challenges for each season. This holds the same
-#' information as the challenges dataset. (superseded by the `challenges` dataset)
-#'
-#' @format This nested tidy data frame contains the following columns:
-#' \describe{
-#'   \item{\code{season_name}}{The season name}
-#'   \item{\code{season}}{The season number}
-#'   \item{\code{episode}}{Episode number of the immunity challenge was played}
-#'   \item{\code{title}}{Episode title}
-#'   \item{\code{voted_out}}{The castaway voted out}
-#'   \item{\code{day}}{Day the castaway or tribe won the immunity challenge}
-#'   \item{\code{order}}{Order in which the castaway was voted off the island}
-#'   \item{\code{immunity}}{Winners of the immunity challenge. Nested}
-#' }
-#' @details Contains details on tribal immunity and individual immunity. Currently it does
-#' not include details on hidden immunity idols. This will be added in time.
-#' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}
-#' @examples
-#' library(dplyr)
-#' library(tidyr)
-#' immunity
-#' immunity %>%
-#'   unnest(immunity)
-"immunity"
 
 #' Jury votes
 #'
@@ -274,7 +217,7 @@
 #'   \item{\code{season}}{Season number}
 #'   \item{\code{episode_number_overall}}{The cumulative episode number}
 #'   \item{\code{episode}}{Episode number for the season}
-#'   \item{\code{title}}{Episode title}
+#'   \item{\code{episode_title}}{Episode title}
 #'   \item{\code{episode_date}}{Date the episode aired}
 #'   \item{\code{viewers}}{Number of viewers (millions) who tuned in}
 #'   \item{\code{rating_18_49}}{TV rating for the 18-49 aged group}
@@ -307,10 +250,10 @@
 #'   \item{\code{season_name}}{The season name}
 #'   \item{\code{season}}{The season number}
 #'   \item{\code{episode}}{Episode number}
-#'   \item{\code{title}}{Episode title}
 #'   \item{\code{day}}{The day of the tribal council}
 #'   \item{\code{challenge_type}}{The challenge type e.g. immunity, reward, etc}
 #'   \item{\code{challenge_name}}{[under development] Name of the challenge played (TBA)}
+#'   \item{\code{outcome_type}}{Whether the challenge is individual or tribal. Some individual reward challenges may involve multiple castawats as the winner gets to choose who they bring along}
 #'   \item{\code{winners_id}}{The ID of the winners of the challenge. Consistent with \code{castaway_id}}
 #'   \item{\code{winners}}{The list of winners. Either the list of people in the tribe which won, list of people that participated on the reward or the individual winner}
 #'   \item{\code{winning_tribe}}{Name of the winner tribe. \code{NA} during the merge}
@@ -353,10 +296,12 @@
 #' \describe{
 #'   \item{\code{season_name}}{The season name}
 #'   \item{\code{season}}{The season number}
+#'   \item{\code{episode}}{Episode number}
 #'   \item{\code{day}}{The day of the tribal council}
 #'   \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano}
 #'   \item{\code{castaway}}{Name of the castaway}
 #'   \item{\code{tribe}}{Name of the tribe the castaway was on}
+#'   \item{\code{tribe_status}}{The status of the tribe e.g. original, swapped, merged, etc. See details for more}
 #' }
 #'
 #' @details Each season by day holds a complete list of castaways still in the game and
@@ -390,3 +335,21 @@
 #'
 #' @source \url{https://survivor.fandom.com/wiki/Hidden_Immunity_Idol}
 "hidden_idols"
+
+#' Confessionals
+#'
+#' A dataset containing the count of confessionals per castaway per episode. A confessional is when
+#' the castaway is speaking directly to the camera about their game.
+#'
+#' @format This data frame contains the following columns:
+#' \describe{
+#'   \item{\code{season_name}}{The season name}
+#'   \item{\code{season}}{The season number}
+#'   \item{\code{episode}}{Episode number}
+#'   \item{\code{castaway}}{Name of the castaway}
+#'   \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano}
+#'   \item{\code{confessional_count}}{The count of confessionals for the castaway during the episode}
+#' }
+#'
+#' @source \url{https://twitter.com/Ryebread01}
+"confessionals"
