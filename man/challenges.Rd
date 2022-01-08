@@ -26,9 +26,8 @@ This nested data frame contains the following columns:
 challenges
 }
 \description{
-A dataset detailing the challenges played including reward and immunity challenges.
-Note: The intention is for this dataset to ultimately replace the individual
-\code{immunity} and \code{rewards} datasets.
+The challenges data set has been superseded by two new data sets \code{challenge_results} and
+\code{challenge_description}.
 }
 \details{
 A nested tidy data frame of immunity and reward challenge results. The
