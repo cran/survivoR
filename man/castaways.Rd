@@ -10,7 +10,7 @@ This data frame contains the following columns:
   \item{\code{season}}{Sesaon number}
   \item{\code{season_name}}{Season name}
   \item{\code{full_name}}{Full name of the castaway}
-  \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano}
+  \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano. The first two letters reference the country of the version played e.g. US, AU (TBA). To recreate the old ID simply extract the digits (See details)}
   \item{\code{castaway}}{Name of castaway. Generally this is the name they were most commonly referred to
   or nickname e.g. no one called Coach, Benjamin. He was simply Coach}
   \item{\code{age}}{Age of the castaway during the season they played}
@@ -19,7 +19,7 @@ This data frame contains the following columns:
   \item{\code{personality_type}}{The Myer-Briggs personality type of the castaway. This will be removed from this table and maintained on \code{castaway_details} in later releases}
   \item{\code{episode}}{Episode number}
   \item{\code{day}}{Number of days the castaway survived. A missing value indicates they later returned to the game that season}
-  \item{\code{order}}{Order in which castaway was voted out e.g. 5 is the 5th person voted of the island}
+  \item{\code{order}}{Boot order. Order in which castaway was voted out e.g. 5 is the 5th person voted of the island}
   \item{\code{result}}{Final result}
   \item{\code{jury_status}}{Jury status}
   \item{\code{original_tribe}}{Original tribe name}
@@ -40,9 +40,12 @@ castaways
 \description{
 A dataset containing details on the results for every castaway and season
 }
+\details{
+If the original \code{castaway_id} is desired simply extract the digits from the ID e.g.
+\code{castaway_id = as.numeric(str_extract(castaway_id, '[:digit:]+'))} in a mutate step.
+}
 \examples{
 library(dplyr)
-library(tidyr)
 castaways \%>\%
   filter(season == 40)
 }
