@@ -7,11 +7,13 @@
 \format{
 This data frame contains the following columns:
 \describe{
+  \item{\code{version}}{Country code for the version of the show}
+  \item{\code{version_season}}{Version season key}
   \item{\code{season_name}}{The season name}
   \item{\code{season}}{The season number}
   \item{\code{episode}}{Episode number}
   \item{\code{day}}{The day of the tribal council}
-  \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano. The first two letters reference the country of the version played e.g. US, AU. To recreated the old ID simply extract teh digits}
+  \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano. The first two letters reference the country of the version played e.g. US, AU.}
   \item{\code{castaway}}{Name of the castaway}
   \item{\code{tribe}}{Name of the tribe the castaway was on}
   \item{\code{tribe_status}}{The status of the tribe e.g. original, swapped, merged, etc. See details for more}
@@ -28,11 +30,11 @@ A mapping for castaways to tribes for each day (day being the day of the tribal 
 This is useful for observing who is on what tribe throughout the game.
 }
 \details{
-Each season by day holds a complete list of castaways still in the game and
+Each season by episode and day holds a complete list of castaways still in the game and
 which tribe they are on. Moving through each day you can observe the changes in
-the tribe. For example the first day (usual day 2) has all castaways mapped to their
+the tribe. For example the first day has all castaways mapped to their
 original tribe. The next day has the same minus the castaway just voted out. This
 is useful for observing the changes in tribe make either due to castaways being voted
-off the island, tribe swaps or otherwise.
+off the island, tribe swaps, who is on Redemption Island and Edge of Extinction.
 }
 \keyword{datasets}

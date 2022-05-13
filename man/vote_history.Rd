@@ -7,20 +7,27 @@
 \format{
 This data frame contains the following columns:
 \describe{
+  \item{\code{version}}{Country code for the version of the show}
+  \item{\code{version_season}}{Version season key}
   \item{\code{season_name}}{The season name}
   \item{\code{season}}{The season number}
   \item{\code{episode}}{Episode number}
   \item{\code{day}}{Day the tribal council took place}
   \item{\code{tribe_status}}{The status of the tribe e.g. original, swapped, merged, etc. See details for more}
+  \item{\code{tribe}}{Tribe name}
   \item{\code{castaway}}{Name of the castaway}
   \item{\code{immunity}}{Type of immunity held by the castaway at the time of the vote e.g. individual,
   hidden (see details for hidden immunity data)}
   \item{\code{vote}}{The castaway for which the vote was cast}
+  \item{\code{vote_event}}{Extra details on the vote e.g. Won or lost the fire challenge, played an extra vote, etc}
+  \item{\code{split_vote}}{If there was a decision to split the vote this records who the vote was split with.
+  Helps to identify successful boots}
   \item{\code{nullified}}{Was the vote nullified by a hidden immunity idol? Logical}
+  \item{\code{tie}}{If the set of votes resulted in a tie. Logical}
   \item{\code{voted_out}}{The castaway who was voted out}
   \item{\code{order}}{Boot order. Order in which castaway was voted out e.g. 5 is the 5th person voted of the island}
   \item{\code{vote_order}}{In the case of ties this indicates the order the votes took place}
-  \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano. The first two letters reference the country of the version played e.g. US, AU. To recreated the old ID simply extract teh digits}
+  \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano. The first two letters reference the country of the version played e.g. US, AU.}
   \item{\code{vote_id}}{ID of the castaway voted for}
   \item{\code{voted_out_id}}{ID of the castaway voted_out}
 }

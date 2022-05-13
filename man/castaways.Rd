@@ -7,10 +7,12 @@
 \format{
 This data frame contains the following columns:
 \describe{
+  \item{\code{version}}{Country code for the version of the show}
+  \item{\code{version_season}}{Version season key}
   \item{\code{season}}{Sesaon number}
   \item{\code{season_name}}{Season name}
   \item{\code{full_name}}{Full name of the castaway}
-  \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano. The first two letters reference the country of the version played e.g. US, AU (TBA). To recreate the old ID simply extract the digits (See details)}
+  \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano. The first two letters reference the country of the version played e.g. US, AU (TBA).}
   \item{\code{castaway}}{Name of castaway. Generally this is the name they were most commonly referred to
   or nickname e.g. no one called Coach, Benjamin. He was simply Coach}
   \item{\code{age}}{Age of the castaway during the season they played}
@@ -23,12 +25,6 @@ This data frame contains the following columns:
   \item{\code{result}}{Final result}
   \item{\code{jury_status}}{Jury status}
   \item{\code{original_tribe}}{Original tribe name}
-  \item{\code{swapped_tribe}}{Swapped tribe name}
-  \item{\code{swapped_tribe_2}}{Second swapped tribe in the event of a second tribe swap or other tribe restructure such as absorbed tribe, outcasts, etc}
-  \item{\code{merged_tribe}}{Merged tribe name}
-  \item{\code{total_votes_received}}{Total number of tribal votes received during the main game for a given season
-  (not overall for those who have played more than once). This includes votes from ties}
-  \item{\code{immunity_idols_won}}{The number of immunity idols won by a castaway for the given season}
 }
 }
 \source{
