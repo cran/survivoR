@@ -9,12 +9,12 @@ This data frame contains the following columns:
 \describe{
   \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano. The first two letters reference the country of the version played e.g. US, AU (TBA).}
   \item{\code{full_name}}{Full name of the castaway}
-  \item{\code{short_name}}{Short name of the castaway. Name typically used during the season. Sometimes there are multiple
+  \item{\code{castaway}}{Short name of the castaway. Name typically used during the season. Sometimes there are multiple
   people with the same name e.g. Rob C and Rob M in Survivor All-Stars. This field takes the most verbose name used}
   \item{\code{date_of_birth}}{Date of birth}
   \item{\code{date_of_death}}{Date of death}
   \item{\code{gender}}{Gender of castaway}
-  \item{\code{poc}}{POC indicator if known and can point to a source, else marked as white. Please log corrections on the Github page}
+  \item{\code{poc}}{POC indicator if known and can point to a source, else marked as white. It is understood this is a contentious issue and ultimately up to the individual as to how they wish to be identified. Please log corrections on the Github page.}
   \item{\code{race}}{Race (if known)}
   \item{\code{ethnicity}}{Ethnicity (if known)}
   \item{\code{occupation}}{Occupation}

@@ -51,7 +51,6 @@
 #'   \item{\code{age}}{Age of the castaway during the season they played}
 #'   \item{\code{city}}{City of residence during the season they played}
 #'   \item{\code{state}}{State of residence during the season they played}
-#'   \item{\code{personality_type}}{The Myer-Briggs personality type of the castaway. This will be removed from this table and maintained on \code{castaway_details} in later releases}
 #'   \item{\code{episode}}{Episode number}
 #'   \item{\code{day}}{Number of days the castaway survived. A missing value indicates they later returned to the game that season}
 #'   \item{\code{order}}{Boot order. Order in which castaway was voted out e.g. 5 is the 5th person voted of the island}
@@ -80,12 +79,12 @@
 #' \describe{
 #'   \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano. The first two letters reference the country of the version played e.g. US, AU (TBA).}
 #'   \item{\code{full_name}}{Full name of the castaway}
-#'   \item{\code{short_name}}{Short name of the castaway. Name typically used during the season. Sometimes there are multiple
+#'   \item{\code{castaway}}{Short name of the castaway. Name typically used during the season. Sometimes there are multiple
 #'   people with the same name e.g. Rob C and Rob M in Survivor All-Stars. This field takes the most verbose name used}
 #'   \item{\code{date_of_birth}}{Date of birth}
 #'   \item{\code{date_of_death}}{Date of death}
 #'   \item{\code{gender}}{Gender of castaway}
-#'   \item{\code{poc}}{POC indicator if known and can point to a source, else marked as white. Please log corrections on the Github page}
+#'   \item{\code{poc}}{POC indicator if known and can point to a source, else marked as white. It is understood this is a contentious issue and ultimately up to the individual as to how they wish to be identified. Please log corrections on the Github page.}
 #'   \item{\code{race}}{Race (if known)}
 #'   \item{\code{ethnicity}}{Ethnicity (if known)}
 #'   \item{\code{occupation}}{Occupation}
@@ -267,8 +266,6 @@
 #'   \item{\code{episode_title}}{Episode title}
 #'   \item{\code{episode_date}}{Date the episode aired}
 #'   \item{\code{viewers}}{Number of viewers (millions) who tuned in}
-#'   \item{\code{rating_18_49}}{TV rating for the 18-49 aged group}
-#'   \item{\code{share_18_49}}{TV share for the 18-49 aged group}
 #'   \item{\code{imdb_rating}}{IMDB rating for the episode on a scale of 0-10}
 #' }
 #' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}
@@ -280,6 +277,8 @@
 #'
 #' @format This nested data frame contains the following columns:
 #' \describe{
+#'   \item{\code{version}}{Country code for the version of the show}
+#'   \item{\code{version_season}}{Version season key}
 #'   \item{\code{season_name}}{The season name}
 #'   \item{\code{season}}{The season number}
 #'   \item{\code{palette}}{The season palette}
@@ -288,6 +287,42 @@
 "season_palettes"
 
 #' Challenge Results
+#'
+#' A dataset detailing the challenges played including reward and immunity challenges.
+#'
+#' @format This data frame contains the following columns
+#' \describe{
+#'   \item{\code{version}}{Country code for the version of the show}
+#'   \item{\code{version_season}}{Version season key}
+#'   \item{\code{season_name}}{The season name}
+#'   \item{\code{season}}{The season number}
+#'   \item{\code{episode}}{Episode number}
+#'   \item{\code{n_boots}}{The number of boots that there have been in the game e.g. if `n_boots == 2` there have been 2
+#'   boots in the game so far and there are N-2 castaways left in the game}
+#'   \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano. The first two letters reference the country of the version played e.g. US, AU (TBA).}
+#'   \item{\code{castaway}}{Name of castaway. Generally this is the name they were most commonly referred to
+#'   or nickname e.g. no one called Coach, Benjamin. He was simply Coach}
+#'   \item{\code{challenge_name}}{The name of the challenge. Challenges can go by different names but where possible
+#'   recurring challenges are kept consistent. While there are tweaks to the challenges where the main components of
+#'   the challenge consistent they share the same name}
+#'   \item{\code{outcome_type}}{Whether the challenge is individual or tribal. Some individual reward challenges may involve multiple castawats as the winner gets to choose who they bring along}
+#'   \item{\code{tribe}}{Current tribe the castaway is on}
+#'   \item{\code{tribe_status}}{The status of the tribe e.g. original, swapped, merged, etc. See details for more}
+#'   \item{\code{challenge_type}}{The challenge type e.g. immunity, reward, etc}
+#'   \item{\code{challenge_id}}{Primary key to the \code{challenge_description} data set which contains features of the challenge}
+#'   \item{\code{result}}{Result of challenge}
+#'   \item{\code{chosen_for_reward}}{If after the reward challenge the castaway was chosen to participate in the reward}
+#' }
+#'
+#' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}
+#' @examples
+#' library(dplyr)
+#' library(tidyr)
+#' challenge_results %>%
+#'   filter(season == 40)
+"challenge_results"
+
+#' Challenge Results (deprecated)
 #'
 #' A dataset detailing the challenges played including reward and immunity challenges.
 #' \code{immunity} and \code{rewards} datasets.
@@ -307,6 +342,7 @@
 #'   \item{\code{challenge_type}}{The challenge type e.g. immunity, reward, etc}
 #'   \item{\code{outcome_type}}{Whether the challenge is individual or tribal. Some individual reward challenges may involve multiple castawats as the winner gets to choose who they bring along}
 #'   \item{\code{challenge_id}}{Primary key to the \code{challenge_description} data set which contains features of the challenge}
+#'   \item{\code{tribe_status}}{The status of the tribe e.g. original, swapped, merged, etc. See details for more}
 #'   \item{\code{winning_tribe}}{Name of the winner tribe. \code{NA} during the merge}
 #'   \item{\code{outcome_status}}{Identifies the winner of individual reward challenges and those chosen to participate
 #'   i.e. they didn't win but were chosen by the winner to join them on the reward.}
@@ -334,10 +370,9 @@
 #' @examples
 #' library(dplyr)
 #' library(tidyr)
-#' challenge_results %>%
-#'   filter(season == 40) %>%
-#'   unnest(winners)
-"challenge_results"
+#' challenge_results_dep %>%
+#'   filter(season == 40)
+"challenge_results_dep"
 
 #' Challenge Description
 #'
@@ -426,34 +461,12 @@
 #'   \item{\code{castaway}}{Name of the castaway}
 #'   \item{\code{tribe}}{Name of the tribe the castaway was on}
 #'   \item{\code{tribe_status}}{The status of the tribe e.g. original, swapped, merged, etc. See details for more}
-#'   \item{\code{in_the_game}}{Logical flag to identify if the castaway is currently in the game. If `FALSE` the castaway
+#'   \item{\code{game_status}}{Logical flag to identify if the castaway is currently in the game. If `FALSE` the castaway
 #'   is on Redemption Island or Edge of Extinction.}
 #' }
 #'
 #' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}
 "boot_mapping"
-
-#' (Deprecated) Hidden Immunity Idols
-#'
-#' This data set has be replaced with the advantage data sets which contain more details
-#' and easier to use structure
-#'
-#' @format This data frame contains the following columns:
-#' \describe{
-#'   \item{\code{season_name}}{The season name}
-#'   \item{\code{season}}{The season number}
-#'   \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano. The first two letters reference the country of the version played e.g. US, AU.}
-#'   \item{\code{castaway}}{Name of the castaway}
-#'   \item{\code{idol_number}}{Indicates whether it is the first, second, etc idol found in the season}
-#'   \item{\code{idols_held}}{The number of idols held by the castaway}
-#'   \item{\code{votes_nullified}}{The number of votes nullified by the idol}
-#'   \item{\code{day_found}}{The day the idol was found}
-#'   \item{\code{day_played}}{The day of the tribal council}
-#'   \item{\code{legacy_advantage}}{If the idol was a legacy advantage or not}
-#' }
-#'
-#' @source \url{https://survivor.fandom.com/wiki/Hidden_Immunity_Idol}
-"hidden_idols"
 
 #' Confessionals
 #'
@@ -535,3 +548,62 @@
 #' Denise found an idol that was split (USHI4002). Later she found the other half (USHI4002b). When played the second half is
 #' considered to have 'absorbed' into the first idol. The first idol found is always considered the primary idol.
 "advantage_details"
+
+#' Screen Time
+#'
+#' A dataset summarising the screen time of contestants on the TV show Survivor.
+#' Currently only contains Season 1-4 and 42.
+#'
+#' @format This data frame contains the following columns:
+#' \describe{
+#'   \item{\code{version_season}}{Version season key}
+#'   \item{\code{episode}}{Episode number}
+#'   \item{\code{castaway_id}}{ID of the castaway (primary key). Also includes
+#'   two special IDs of host (i.e. Jeff Probst) or unknown (the image detection
+#'   couldn't identify the face with sufficient accuracy)}
+#'   \item{\code{screen_time}}{Estimated screen time for the individual in seconds.}
+#' }
+#'
+#' @details Individuals' screen time is calculated, at a high-level, via the following process:
+#'
+#' \enumerate{
+#'    \item Frames are sampled from episodes on a 1 second time interval
+#'    \item MTCNN detects the human faces within each frame
+#'    \item VGGFace2 converts each detected face into a 512d vector space
+#'    \item A training set of labelled images (1 for each contestant + 3 for
+#'    Jeff Probst) is processed in the same way to determine where they sit in
+#'    the vector space.
+#'    TODO: This could be made more accurate by increasing the number of training
+#'    images per contestant.
+#'    \item The Euclidean distance is calculated for the faces detected in the frame
+#'    to each of the contestants in the season (+Jeff). If the minimum distance is
+#'    greater than 1.2 the face is labelled as "unknown".
+#'    TODO: Review how robust this distance cutoff truly is - currently based on
+#'    manual review of Season 42.
+#'    \item A multi-class SVM is trained on the training set to label faces. For
+#'    any face not identified as "unknown", the vector embedding is run into this
+#'    model and a label is generated.
+#'    \item All labelled faces are aggregated together, with an assumption of 1
+#'    full second of screen time each time a face is seen.
+#' }
+"screen_time"
+
+#' Survivor Auction
+#'
+#' A dataset showing who attended the Survivor Auction during the seasons they were held
+#'
+#' @format This data frame contains the following columns:
+#' \describe{
+#'   \item{\code{version}}{Country code for the version of the show}
+#'   \item{\code{version_season}}{Version season key}
+#'   \item{\code{season_name}}{The season name}
+#'   \item{\code{season}}{The season number}
+#'   \item{\code{episode}}{Episode number}
+#'   \item{\code{n_boots}}{The number of boots so far in the game}
+#'   \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano. The first two letters reference the country of the version played e.g. US, AU (TBA).}
+#'   \item{\code{castaway}}{Name of castaway. Generally this is the name they were most commonly referred to
+#'   or nickname e.g. no one called Coach, Benjamin. He was simply Coach}
+#'   \item{\code{tribe_status}}{The status of the tribe e.g. original, swapped, merged, etc. See details for more}
+#'   \item{\code{tribe}}{Tribe name}
+#' }
+"survivor_auction"
