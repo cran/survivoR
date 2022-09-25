@@ -1,7 +1,7 @@
 Package: survivoR
 Type: Package
 Title: Data from all Seasons of Survivor (US) TV Series in Tidy Format
-Version: 2.0
+Version: 2.0.1
 Authors@R: 
   c(person(given = "Daniel",
          family = "Oehm",
@@ -20,8 +20,8 @@ Description: Several datasets which detail the results and events of each season
   useful for practicing data wrangling, graph analytics and analysing how each season of Survivor played out. 
   Includes 'ggplot2' scales and colour palettes for visualisation.
 Depends: R (>= 3.5.0)
-Imports: tidyr, ggplot2, stringr, magrittr
-Suggests: dplyr, forcats, glue
+Imports: tidyr, ggplot2, stringr, magrittr, ggpath, glue, prismatic
+Suggests: dplyr, forcats, cropcircles
 License: MIT + file LICENSE
 URL: https://github.com/doehm/survivoR
 BugReports: https://github.com/doehm/survivoR/issues
@@ -29,10 +29,10 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.1
 NeedsCompilation: no
-Packaged: 2022-09-21 21:41:41 UTC; Dan
+Packaged: 2022-09-24 22:39:43 UTC; Dan
 Author: Daniel Oehm [aut, cre],
   Carly Levitz [ctb],
   Dario Mavec [ctb]
 Maintainer: Daniel Oehm <danieloehm@gmail.com>
 Repository: CRAN
-Date/Publication: 2022-09-21 22:00:02 UTC
+Date/Publication: 2022-09-25 10:00:02 UTC
