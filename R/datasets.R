@@ -33,7 +33,6 @@
 #' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}
 "season_summary"
 
-
 #' Castaways
 #'
 #' A dataset containing details on the results for every castaway and season
@@ -265,6 +264,7 @@
 #'   \item{\code{episode}}{Episode number for the season}
 #'   \item{\code{episode_title}}{Episode title}
 #'   \item{\code{episode_date}}{Date the episode aired}
+#'   \item{\code{episode_length}}{Episode length in minutes}
 #'   \item{\code{viewers}}{Number of viewers (millions) who tuned in}
 #'   \item{\code{imdb_rating}}{IMDB rating for the episode on a scale of 0-10}
 #' }
@@ -312,6 +312,7 @@
 #'   \item{\code{challenge_id}}{Primary key to the \code{challenge_description} data set which contains features of the challenge}
 #'   \item{\code{result}}{Result of challenge}
 #'   \item{\code{chosen_for_reward}}{If after the reward challenge the castaway was chosen to participate in the reward}
+#'   \item{\code{sit_out}}{\code{TRUE} if they sat out of the challenge or \code{FALSE} if they participate}
 #' }
 #'
 #' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}
@@ -483,6 +484,7 @@
 #'   \item{\code{castaway}}{Name of the castaway}
 #'   \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano. The first two letters reference the country of the version played e.g. US, AU.}
 #'   \item{\code{confessional_count}}{The count of confessionals for the castaway during the episode}
+#'   \item{\code{confessional_time}}{The total time for all confessionals for the episode for each castaway}
 #' }
 #'
 #' @details Confessional data has been counted by contributors of the survivoR R package and consolidated
