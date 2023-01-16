@@ -11,7 +11,7 @@
 
 # survivoR <img src='dev/images/hex.png' align="right" height="240" />
 
-950 episodes. 946 people. 1 package!
+950 episodes. 959 people. 1 package!
 
 survivoR is a collection of data sets detailing events across 60 seasons
 of Survivor US, Survivor Australia, Survivor South Africa and Survivor
@@ -21,7 +21,7 @@ more!
 
 # Installation
 
-Now on CRAN (v2.0.4) or Git (v2.0.4).
+Now on CRAN (v2.0.4) or Git (v2.0.7).
 
 If Git \> CRAN I’d suggest install from Git. We are constantly improving
 the data sets so the github version is likely to be slightly improved.
@@ -36,8 +36,8 @@ devtools::install_github("doehm/survivoR")
 
 # News: survivoR 2.0.4
 
--   Added complete US43 data
--   Added `sit_out` to `challenge_results`
+- Added complete US43 data
+- Added `sit_out` to `challenge_results`
 
 # Confessionals
 
@@ -72,7 +72,7 @@ season_summary
 #> 10 SA      SA02    Surviv…      2 Johor   Malays… "Two t… Lorett… SA0030  Loret…
 #> # … with 50 more rows, 12 more variables: runner_ups <chr>, final_vote <chr>,
 #> #   timeslot <chr>, premiered <date>, ended <date>, filming_started <date>,
-#> #   filming_ended <date>, viewers_premier <dbl>, viewers_finale <dbl>,
+#> #   filming_ended <date>, viewers_premiere <dbl>, viewers_finale <dbl>,
 #> #   viewers_reunion <dbl>, viewers_mean <dbl>, rank <dbl>, and abbreviated
 #> #   variable names ¹​version_season, ²​season_name, ³​location, ⁴​tribe_setup,
 #> #   ⁵​full_name, ⁶​winner_id
@@ -92,9 +92,9 @@ Each castaway has a unique `castaway_id` which links the individual
 across all data sets and seasons. It also links to the following ID’s
 found on the `vote_history`, `jury_votes` and `challenges` data sets.
 
--   `vote_id`
--   `voted_out_id`
--   `finalist_id`
+- `vote_id`
+- `voted_out_id`
+- `finalist_id`
 
 ``` r
 castaways |> 
@@ -142,7 +142,7 @@ ethnicity, the data is kept as missing rather than making an assumption.
 
 ``` r
 castaway_details
-#> # A tibble: 946 × 11
+#> # A tibble: 959 × 11
 #>    castaway_id full_n…¹ casta…² date_of_…³ date_of_…⁴ gender race  ethni…⁵ poc  
 #>    <chr>       <chr>    <chr>   <date>     <date>     <chr>  <chr> <chr>   <chr>
 #>  1 AU0001      Des Qui… Des     NA         NA         Male   <NA>  <NA>    <NA> 
@@ -155,7 +155,7 @@ castaway_details
 #>  8 AU0008      Kat Dum… Katinka 1989-09-21 NA         Female <NA>  <NA>    <NA> 
 #>  9 AU0009      Andrew … Andrew  NA         NA         Male   <NA>  <NA>    <NA> 
 #> 10 AU0010      Craig I… Craig   NA         NA         Male   <NA>  <NA>    <NA> 
-#> # … with 936 more rows, 2 more variables: occupation <chr>,
+#> # … with 949 more rows, 2 more variables: occupation <chr>,
 #> #   personality_type <chr>, and abbreviated variable names ¹​full_name,
 #> #   ²​castaway, ³​date_of_birth, ⁴​date_of_death, ⁵​ethnicity
 ```
@@ -175,7 +175,7 @@ vh <- vote_history |>
     episode == 9
   ) 
 vh
-#> # A tibble: 10 × 21
+#> # A tibble: 10 × 22
 #>    version version_…¹ seaso…² season episode   day tribe…³ tribe casta…⁴ immun…⁵
 #>    <chr>   <chr>      <chr>    <dbl>   <dbl> <dbl> <chr>   <chr> <chr>   <chr>  
 #>  1 US      US42       Surviv…     42       9    17 Merged  Kula… Hai     Indivi…
@@ -188,11 +188,11 @@ vh
 #>  8 US      US42       Surviv…     42       9    17 Merged  Kula… Lindsay <NA>   
 #>  9 US      US42       Surviv…     42       9    17 Merged  Kula… Maryan… Hidden 
 #> 10 US      US42       Surviv…     42       9    17 Merged  Kula… Tori    <NA>   
-#> # … with 11 more variables: vote <chr>, vote_event <chr>, split_vote <chr>,
-#> #   nullified <lgl>, tie <lgl>, voted_out <chr>, order <dbl>, vote_order <dbl>,
-#> #   castaway_id <chr>, vote_id <chr>, voted_out_id <chr>, and abbreviated
-#> #   variable names ¹​version_season, ²​season_name, ³​tribe_status, ⁴​castaway,
-#> #   ⁵​immunity
+#> # … with 12 more variables: vote <chr>, vote_event <chr>,
+#> #   vote_event_outcome <chr>, split_vote <chr>, nullified <lgl>, tie <lgl>,
+#> #   voted_out <chr>, order <dbl>, vote_order <dbl>, castaway_id <chr>,
+#> #   vote_id <chr>, voted_out_id <chr>, and abbreviated variable names
+#> #   ¹​version_season, ²​season_name, ³​tribe_status, ⁴​castaway, ⁵​immunity
 ```
 
 ``` r
@@ -277,28 +277,28 @@ descriptive features need altering please let me know in the
 
 Features:
 
--   `puzzle`: If the challenge contains a puzzle element.
--   `race`: If the challenge is a race between tribes, teams or
-    individuals.
--   `precision`: If the challenge contains a precision element
-    e.g. shooting an arrow, hitting a target, etc.
--   `endurance`: If the challenge is an endurance event e.g. last tribe,
-    team, individual standing.
--   `strength`: If the challenge is largerly strength based
-    e.g. Shoulder the Load.
--   `turn_based`: If the challenge is conducted in a series of rounds
-    until a certain amount of points are scored or there is one player
-    remaining.
--   `balance`: If the challenge contains a balancing element.
--   `food`: If the challenge contains a food element e.g. the food
-    challenge, biting off chunks of meat.
--   `knowledge`: If the challenge contains a knowledge component e.g. Q
-    and A about the location.
--   `memory`: If the challenge contains a memory element e.g. memorising
-    a sequence of items.
--   `fire`: If the challenge contains an element of fire making /
-    maintaining.
--   `water`: If the challenge is held, in part, in the water.
+- `puzzle`: If the challenge contains a puzzle element.
+- `race`: If the challenge is a race between tribes, teams or
+  individuals.
+- `precision`: If the challenge contains a precision element
+  e.g. shooting an arrow, hitting a target, etc.
+- `endurance`: If the challenge is an endurance event e.g. last tribe,
+  team, individual standing.
+- `strength`: If the challenge is largerly strength based e.g. Shoulder
+  the Load.
+- `turn_based`: If the challenge is conducted in a series of rounds
+  until a certain amount of points are scored or there is one player
+  remaining.
+- `balance`: If the challenge contains a balancing element.
+- `food`: If the challenge contains a food element e.g. the food
+  challenge, biting off chunks of meat.
+- `knowledge`: If the challenge contains a knowledge component e.g. Q
+  and A about the location.
+- `memory`: If the challenge contains a memory element e.g. memorising a
+  sequence of items.
+- `fire`: If the challenge contains an element of fire making /
+  maintaining.
+- `water`: If the challenge is held, in part, in the water.
 
 ``` r
 challenge_description
@@ -599,7 +599,7 @@ for viewers aged 18 to 49 years of age.
 ``` r
 viewers |> 
   filter(season == 42)
-#> # A tibble: 13 × 11
+#> # A tibble: 13 × 12
 #> # Groups:   version [1]
 #>    version version_s…¹ seaso…² season episo…³ episode episo…⁴ episode_…⁵ episo…⁶
 #>    <chr>   <chr>       <chr>    <dbl>   <int>   <dbl> <chr>   <date>       <dbl>
@@ -608,17 +608,17 @@ viewers |>
 #>  3 US      US42        Surviv…     42     613       3 Go for… 2022-03-23      43
 #>  4 US      US42        Surviv…     42     614       4 Vibe o… 2022-03-30      43
 #>  5 US      US42        Surviv…     42     615       5 I'm Su… 2022-04-06      43
-#>  6 US      US42        Surviv…     42     616       6 You Ca… 2022-04-13      86
+#>  6 US      US42        Surviv…     42     616       6 You Ca… 2022-04-13      43
 #>  7 US      US42        Surviv…     42     617       7 The De… 2022-04-13      43
 #>  8 US      US42        Surviv…     42     618       8 You Be… 2022-04-20      43
 #>  9 US      US42        Surviv…     42     619       9 Game o… 2022-04-27      43
 #> 10 US      US42        Surviv…     42     620      10 Tell a… 2022-05-04      43
 #> 11 US      US42        Surviv…     42     621      11 Battle… 2022-05-11      43
-#> 12 US      US42        Surviv…     42     622      12 Caterp… 2022-05-18     129
-#> 13 US      US42        Surviv…     42     623      13 It Com… 2022-05-25      NA
-#> # … with 2 more variables: viewers <dbl>, imdb_rating <dbl>, and abbreviated
-#> #   variable names ¹​version_season, ²​season_name, ³​episode_number_overall,
-#> #   ⁴​episode_title, ⁵​episode_date, ⁶​episode_length
+#> 12 US      US42        Surviv…     42     622      12 Caterp… 2022-05-18      43
+#> 13 US      US42        Surviv…     42     623      13 It Com… 2022-05-25     129
+#> # … with 3 more variables: viewers <dbl>, imdb_rating <dbl>, n_ratings <dbl>,
+#> #   and abbreviated variable names ¹​version_season, ²​season_name,
+#> #   ³​episode_number_overall, ⁴​episode_title, ⁵​episode_date, ⁶​episode_length
 ```
 
 ## Tribe colours
@@ -630,7 +630,7 @@ tribal colours to ggplots with the scale functions.
 
 ``` r
 tribe_colours
-#> # A tibble: 222 × 7
+#> # A tibble: 225 × 7
 #>    version version_season season_name               season tribe tribe…¹ tribe…²
 #>    <chr>   <chr>          <chr>                      <dbl> <chr> <chr>   <chr>  
 #>  1 AU      AU01           Survivor Australia: 2016       1 Agan… #FF0000 Origin…
@@ -643,7 +643,7 @@ tribe_colours
 #>  8 AU      AU03           Survivor Australia: Cham…      3 Cham… #0000FF Origin…
 #>  9 AU      AU03           Survivor Australia: Cham…      3 Cont… #FF0000 Origin…
 #> 10 AU      AU03           Survivor Australia: Cham…      3 Koro… #000000 Merged 
-#> # … with 212 more rows, and abbreviated variable names ¹​tribe_colour,
+#> # … with 215 more rows, and abbreviated variable names ¹​tribe_colour,
 #> #   ²​tribe_status
 ```
 
@@ -772,21 +772,21 @@ A big thank you to:
 
 #### Package contributor and maintainers
 
--   [**Carly Levitz**](https://twitter.com/carlylevitz) for ongoing data
-    collection and curation
+- [**Carly Levitz**](https://twitter.com/carlylevitz) for ongoing data
+  collection and curation
 
 #### Data contributors
 
--   [**Dario Mavec**](https://github.com/dariomavec) for developing the
-    face detection model for estimating total screen time
--   [**Sam**](https://twitter.com/survivorfansam) for contributing to
-    the counfessional counts
--   **Camilla Bendetti** for collating the personality type data for
-    each castaway.
--   **Uygar Sozer** for adding the filming start and end dates for each
-    season.
--   **Holt Skinner** for creating the castaway ID to map people across
-    seasons and manage name changes.
+- [**Dario Mavec**](https://github.com/dariomavec) for developing the
+  face detection model for estimating total screen time
+- [**Sam**](https://twitter.com/survivorfansam) for contributing to the
+  counfessional counts
+- **Camilla Bendetti** for collating the personality type data for each
+  castaway.
+- **Uygar Sozer** for adding the filming start and end dates for each
+  season.
+- **Holt Skinner** for creating the castaway ID to map people across
+  seasons and manage name changes.
 
 # References
 

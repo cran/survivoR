@@ -21,7 +21,7 @@
 #'   \item{\code{ended}}{Date the season ended}
 #'   \item{\code{filming_started}}{Date the filming of the season started}
 #'   \item{\code{filming_ended}}{Date the filming ended (39 or 42 days after the start)}
-#'   \item{\code{viewers_premier}}{Number of viewers (millions) who tuned in for the premier}
+#'   \item{\code{viewers_premiere}}{Number of viewers (millions) who tuned in for the premier}
 #'   \item{\code{viewers_finale}}{Number of viewers (millions) who tuned in for the finale}
 #'   \item{\code{viewers_reunion}}{Number of viewers (millions) who tuned in for the reunion}
 #'   \item{\code{viewers_mean}}{Average number of viewers (millions) who tuned in over the season}
@@ -149,6 +149,7 @@
 #'   hidden (see details for hidden immunity data)}
 #'   \item{\code{vote}}{The castaway for which the vote was cast}
 #'   \item{\code{vote_event}}{Extra details on the vote e.g. Won or lost the fire challenge, played an extra vote, etc}
+#'   \item{\code{vote_event_outcome}}{The outcome of the vote event}
 #'   \item{\code{split_vote}}{If there was a decision to split the vote this records who the vote was split with.
 #'   Helps to identify successful boots}
 #'   \item{\code{nullified}}{Was the vote nullified by a hidden immunity idol? Logical}
@@ -266,7 +267,8 @@
 #'   \item{\code{episode_date}}{Date the episode aired}
 #'   \item{\code{episode_length}}{Episode length in minutes}
 #'   \item{\code{viewers}}{Number of viewers (millions) who tuned in}
-#'   \item{\code{imdb_rating}}{IMDB rating for the episode on a scale of 0-10}
+#'   \item{\code{imdb_rating}}{IMDb rating for the episode on a scale of 0-10}
+#'   \item{\code{n_ratings}}{The number of ratings submitted to IMDb}
 #' }
 #' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}
 "viewers"
