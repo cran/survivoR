@@ -1,7 +1,7 @@
 Package: survivoR
 Type: Package
 Title: Data from all Seasons of Survivor (US) TV Series in Tidy Format
-Version: 2.0.7
+Version: 2.0.8
 Authors@R: 
   c(person(given = "Daniel",
          family = "Oehm",
@@ -30,10 +30,10 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
 NeedsCompilation: no
-Packaged: 2023-01-16 19:58:44 UTC; Dan
+Packaged: 2023-04-02 11:56:42 UTC; Dan
 Author: Daniel Oehm [aut, cre],
   Carly Levitz [ctb],
   Dario Mavec [ctb]
 Maintainer: Daniel Oehm <danieloehm@gmail.com>
 Repository: CRAN
-Date/Publication: 2023-01-16 20:40:02 UTC
+Date/Publication: 2023-04-02 12:40:02 UTC

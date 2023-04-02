@@ -8,6 +8,7 @@
 #'   \item{\code{version_season}}{Version season key}
 #'   \item{\code{season_name}}{Season name}
 #'   \item{\code{season}}{Sesaon number}
+#'   \item{\code{n_cast}}{Number of cast in the season}
 #'   \item{\code{location}}{Location of the season}
 #'   \item{\code{country}}{Country the season was held}
 #'   \item{\code{tribe_setup}}{Initial setup of the tribe e.g. heroes vs Healers vs Hustlers}
@@ -78,6 +79,7 @@
 #' \describe{
 #'   \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano. The first two letters reference the country of the version played e.g. US, AU (TBA).}
 #'   \item{\code{full_name}}{Full name of the castaway}
+#'   \item{\code{full_name_detailed}}{A detailed version of full_name for plotting e.g. 'Boston' Rob Mariano}
 #'   \item{\code{castaway}}{Short name of the castaway. Name typically used during the season. Sometimes there are multiple
 #'   people with the same name e.g. Rob C and Rob M in Survivor All-Stars. This field takes the most verbose name used}
 #'   \item{\code{date_of_birth}}{Date of birth}
@@ -325,58 +327,6 @@
 #'   filter(season == 40)
 "challenge_results"
 
-#' Challenge Results (deprecated)
-#'
-#' A dataset detailing the challenges played including reward and immunity challenges.
-#' \code{immunity} and \code{rewards} datasets.
-#'
-#' @format This nested data frame contains the following columns:
-#' \describe{
-#'   \item{\code{season_name}}{The season name}
-#'   \item{\code{season}}{The season number}
-#'   \item{\code{episode}}{Episode number}
-#'   \item{\code{day}}{The day of the tribal council}
-#'   \item{\code{order}}{The number of boots that there have been in the game e.g. if `order == 2` there have been 2
-#'   boots in the game so far and there are N-2 castaways left in the game}
-#'   \item{\code{episode_title}}{Episode title}
-#'   \item{\code{challenge_name}}{The name of the challenge. Challenges can go by different names but where possible
-#'   recurring challenges are kept consistent. While there are tweaks to the challenges where the main components of
-#'   the challenge consistent they share the same name}
-#'   \item{\code{challenge_type}}{The challenge type e.g. immunity, reward, etc}
-#'   \item{\code{outcome_type}}{Whether the challenge is individual or tribal. Some individual reward challenges may involve multiple castawats as the winner gets to choose who they bring along}
-#'   \item{\code{challenge_id}}{Primary key to the \code{challenge_description} data set which contains features of the challenge}
-#'   \item{\code{tribe_status}}{The status of the tribe e.g. original, swapped, merged, etc. See details for more}
-#'   \item{\code{winning_tribe}}{Name of the winner tribe. \code{NA} during the merge}
-#'   \item{\code{outcome_status}}{Identifies the winner of individual reward challenges and those chosen to participate
-#'   i.e. they didn't win but were chosen by the winner to join them on the reward.}
-#'   \item{\code{winner}}{The list of winners. Either the list of people in the tribe which won, list of people that participated on the reward or the individual winner}
-#'   \item{\code{winner_id}}{The ID of the winners of the challenge. Consistent with \code{castaway_id}}
-#' }
-#'
-#' @details A nested tidy data frame of immunity and reward challenge results. The
-#' winners and winning tribe of the challenge are found by expanding the \code{winner}
-#' column. For individual immunity challenges the winning tribe is simply \code{NA}.
-#'
-#' Typically in the merge if a single person win a reward they are allowed to bring
-#' others along with them. The first castaway in the expanded list is likely to be the
-#' winner and the subsequent players those they brought along with them. Although,
-#' not always. Occasionally in the merge the castaways are split into two teams for
-#' the purpose of the reward, in which case all castaways win the reward rather than
-#' a single person.
-#'
-#' The \code{day} field on this data set represents the day of the tribal council rather
-#' than the day of the challenge. This is to more easily associate the reward challenge
-#' with the immunity challenge and result of the tribal council. It also helps for
-#' joining tables.
-#'
-#' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}
-#' @examples
-#' library(dplyr)
-#' library(tidyr)
-#' challenge_results_dep %>%
-#'   filter(season == 40)
-"challenge_results_dep"
-
 #' Challenge Description
 #'
 #' A dataset detailing the challenges played and the elements they include over all seasons of Survivor
@@ -460,6 +410,7 @@
 #'   \item{\code{episode}}{Episode number}
 #'   \item{\code{order}}{The number of boots that there have been in the game e.g. if `order == 2` there have been 2
 #'   boots in the game so far and there are N-2 castaways left in the game}
+#'   \item{\code{final_n}}{The final number of castaways e.g. you can filter to the final 4 by `filter(boot_mapping, final_n == 4)`}
 #'   \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano. The first two letters reference the country of the version played e.g. US, AU.}
 #'   \item{\code{castaway}}{Name of the castaway}
 #'   \item{\code{tribe}}{Name of the tribe the castaway was on}
@@ -487,6 +438,8 @@
 #'   \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano. The first two letters reference the country of the version played e.g. US, AU.}
 #'   \item{\code{confessional_count}}{The count of confessionals for the castaway during the episode}
 #'   \item{\code{confessional_time}}{The total time for all confessionals for the episode for each castaway}
+#'   \item{\code{index_count}}{The index based on the confessional counts. See details.}
+#'   \item{\code{index_time}}{The index based on the confessional time. See details.}
 #' }
 #'
 #' @details Confessional data has been counted by contributors of the survivoR R package and consolidated
@@ -500,6 +453,11 @@
 #' across all other datasets.
 #'
 #' In the case of recap episodes, this episode is left blank.
+#'
+#' The indexes are a measure of how many more confessional counts or time the castaway has received given the point in the game.
+#' For example a `index_count` of 1 implies the castaway has received the expected number of confessionals given equal share within tribe.
+#' An index of 1.5 implies have have received 50% more. The measure is standardised within tribe since the tribe that goes to tribal
+#' typically receives more confessionals for the episode. Makes sense. `index_time` is the same but using time instead of counts.
 #'
 #' If you also count confessionals, please get in touch and I'll add them into the package.
 "confessionals"
