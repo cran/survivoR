@@ -1,3 +1,10 @@
+# survivoR 2.1.0
+
+* Version increment
+* Adding complete US44, UK01 and NZ02 data
+* New confessional timing shiny app.
+  * Run with launch_confessional_app()
+
 # survivoR 2.0.8
 
 * Adding complete AU08 data

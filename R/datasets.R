@@ -55,6 +55,7 @@
 #'   \item{\code{day}}{Number of days the castaway survived. A missing value indicates they later returned to the game that season}
 #'   \item{\code{order}}{Boot order. Order in which castaway was voted out e.g. 5 is the 5th person voted of the island}
 #'   \item{\code{result}}{Final result}
+#'   \item{\code{result_number}}{Result number i.e. the final place. NA for castaways that were voted out but later returned e.g. Redemption Island}
 #'   \item{\code{jury_status}}{Jury status}
 #'   \item{\code{original_tribe}}{Original tribe name}
 #' }
@@ -85,11 +86,15 @@
 #'   \item{\code{date_of_birth}}{Date of birth}
 #'   \item{\code{date_of_death}}{Date of death}
 #'   \item{\code{gender}}{Gender of castaway}
-#'   \item{\code{poc}}{POC indicator if known and can point to a source, else marked as white. It is understood this is a contentious issue and ultimately up to the individual as to how they wish to be identified. Please log corrections on the Github page.}
 #'   \item{\code{race}}{Race (if known)}
 #'   \item{\code{ethnicity}}{Ethnicity (if known)}
-#'   \item{\code{occupation}}{Occupation}
+#'   \item{\code{poc}}{POC indicator if known and can point to a source, else marked as white. It is understood this is a contentious issue and ultimately up to the individual as to how they wish to be identified. Please log corrections on the Github page.}
 #'   \item{\code{personality_type}}{The Myer-Briggs personality type of the castaway}
+#'   \item{\code{lgbt}}{LGBTQIA+ status as listed on the survivor wiki.}
+#'   \item{\code{occupation}}{Occupation}
+#'   \item{\code{three_words}}{Answer to the question "three words to describe you?"}
+#'   \item{\code{hobbies}}{Answer to the question "what are you favourite hobbies?"}
+#'   \item{\code{pet_peeves}}{Answer to the question "what are your pet peeves?"}
 #' }
 #'
 #' @details Race and ethnicity data is included if known and can point to a source, rather than making an assumption
@@ -266,6 +271,7 @@
 #'   \item{\code{episode_number_overall}}{The cumulative episode number}
 #'   \item{\code{episode}}{Episode number for the season}
 #'   \item{\code{episode_title}}{Episode title}
+#'   \item{\code{episode_label}}{A standardised episode label}
 #'   \item{\code{episode_date}}{Date the episode aired}
 #'   \item{\code{episode_length}}{Episode length in minutes}
 #'   \item{\code{viewers}}{Number of viewers (millions) who tuned in}

@@ -1,0 +1,71 @@
+.tab1 {
+  tab-size: 8;
+}
+.stamp {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.log {
+  font-weight: 700;
+  border-radius: 20px;
+  padding: 6px;
+  border-color: #000000;
+}
+
+.title {
+  font-weight: 700;
+  font-size: 36px;
+  padding-bottom: 10px;
+  text-align: right;
+}
+
+.subtitle {
+  font-weight: 700;
+  font-size: 18px;
+  border-bottom-width: 1px;
+  border-bottom-color: black;
+}
+
+* {
+  font-family: 'Barlow Condensed', sans-serif;
+}
+
+.hdr-bg {
+  position: relative;
+  font-weight: 700;
+  transform: skew(-12deg) translateX(-10%);
+  left: 7%;
+  bottom: 16px;
+  width: 200px;
+  height: 32px;
+  color: rgb(0, 0, 0);
+  text-align: center;
+  text-transform: translateY(50%);
+}
+
+/* Rounded border */
+hr.rounded {
+  border-top: 1px solid #bbb;
+  border-radius: 0.5px;
+}
+
+.cast-images {
+  border-radius: 50%;
+}
+
+.start-button {
+  padding: 8px;
+  margin-top: 9px;
+  padding-left: 12px;
+  padding-right: 14px;
+}
+
+.this-button {
+  padding-left: 27px;
+  padding-right: 27px;
+}
+
+.duration {
+  margin-top: 6px;
+  margin-left: 10px;
+}
