@@ -13,12 +13,14 @@ conf_app_ui <- function() {
         textOutput("poll"),
         HTML("<hr class='rounded'>"),
         uiOutput("path_input"),
+        uiOutput("file_selector"),
         fluidRow(
           column(4, selectInput("version", "Version", choices = c("US", "AU", "SA", "NZ", "UK"), selected = "US")),
           withSpinner(uiOutput("season_selector"), proxy.height = '40px', type = 7),
           uiOutput("episode_selector"),
         ),
         actionButton("create_file", HTML("&nbsp;Start"), icon = icon("play"), class = "this-button"),
+        # actionButton("load_file", HTML("&nbsp;Load"), icon = icon("load"), class = "this-button"),
         actionButton("show_time", HTML("&nbsp;Show counts"), icon = icon("stopwatch-20")),
         actionButton("refresh", HTML("&nbsp;Refresh page"), icon = icon("rotate-right")),
         actionButton("close", HTML("&nbsp;Close app"), class = "btn action-button", icon = icon("xmark")),
@@ -26,8 +28,9 @@ conf_app_ui <- function() {
         HTML("<hr class='rounded'>"),
         HTML("<span class='subtitle'>Adjustments</span>"),
         fluidRow(
-          column(6, numericInput("id_adj", label = "ID", value = 1, min = 1)),
-          column(6, selectInput("value_adj", label = "Adjustment", choices = c("Delete", c(-10, -7, -5:5, 7, 10)))),
+          column(4, numericInput("id_adj", label = "ID", value = 1, min = 1)),
+          column(4, selectInput("value_adj", label = "Adjustment", choices = c("Delete", "Change castaway", c(-10, -7, -5:5, 7, 10)))),
+          column(4, uiOutput("castaway_adj"))
         ),
         actionButton("apply_adj", HTML("&nbsp;Apply Adjustment"), icon = icon("right-to-bracket")),
         HTML("<hr class='rounded'>"),

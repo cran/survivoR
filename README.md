@@ -3,17 +3,16 @@
 
 # survivoR <img src='dev/images/hex-flame-final.png' align="right" height="240" />
 
-64 seasons. 1011 people. 1 package!
+67 seasons. 1058 people. 1 package!
 
-survivoR is a collection of data sets detailing events across 64 seasons
-of Survivor US, Survivor Australia, Survivor South Africa and Survivor
-New Zealand. It includes castaway information, vote history, immunity
-and reward challenge winners, jury votes, advantage details and heaps
-more!
+survivoR is a collection of data sets detailing events across 67 seasons
+of Survivor US, Australia, South Africa, New Zealand and UK. It includes
+castaway information, vote history, immunity and reward challenge
+winners, jury votes, advantage details and a lot more.
 
 # Installation
 
-Now on CRAN (v2.08) or Git (v2.1).
+Now on CRAN (v2.1.0) or Git (v2.3.0).
 
 If Git \> CRAN I’d suggest install from Git. We are constantly improving
 the data sets so the github version is likely to be slightly improved.
@@ -26,24 +25,28 @@ install.packages("survivoR")
 devtools::install_github("doehm/survivoR")
 ```
 
-# News: survivoR 2.0.8
+# News: survivoR 2.1.0
 
-- Adding complete AU08 data
-- New features
-  - `final_n` on `boot_mapping`
-  - `n_cast` on `season_summary`
-  - `index_count` and `index_time` on `confessionals`
-- New `challenge_id` on `challenge_results`
+- Adding data for US44, UK01 and NZ02
+- Confessional timing app built with R Shiny (see below)
+- Confessional times for US44 and UK01
+- `result_number` on castaways
+- New features on `castaway_details`
+  - `lgbt`+ flag
+  - `three_words` – the answer to the question “Three words to describe
+    you”.
+  - `hobbies`
+  - `pet_peeves`
 
 # Confessionals
 
 ### Confessionals repo
 
-The following link takes you to a repository of complete confessional
-tables, inlcuding counts and confessional timing for a few seasons.
+The following link takes you to a repository of complete
+<a href='http://gradientdescending.com/survivor/tables/confessionals.html'>confessional
+tables</a>, inlcuding counts and confessional timing for a few seasons.
 
-<a href='http://gradientdescending.com/survivor/tables/confessionals.html'><img src='http://gradientdescending.com/survivor/tables/confessionals/US/43/confessionals.png' align = 'center' height='50' width='auto'> Confessional
-tables</a>
+<a href='http://gradientdescending.com/survivor/tables/confessionals.html'><img src='http://gradientdescending.com/survivor/tables/confessionals/US/43/confessionals.png' align = 'center' height='400' width='auto'></a>
 
 Confessional counts from [myself](https://twitter.com/danoehm), [Carly
 Levitz](https://twitter.com/carlylevitz),
@@ -51,7 +54,7 @@ Levitz](https://twitter.com/carlylevitz),
 
 ### Confessional timing
 
-In cluded in the package is a confessional timing app to record the
+Included in the package is a confessional timing app to record the
 length of confessionals while watching the episode.
 
 To launch the app, first install the package and run,
@@ -61,7 +64,10 @@ library(survivoR)
 launch_confessional_app()
 ```
 
-<img src='dev/images/conf-app-gif.gif'>
+<a href='https://github.com/doehm/survivoR/tree/master/inst'><img src='dev/images/conf-app-gif.gif'></a>
+
+To try it out online 👉 [Confessional timing
+app](https://danieloehm.shinyapps.io/survivorDash/)
 
 More info [here](https://github.com/doehm/survivoR/tree/master/inst).
 
@@ -84,8 +90,9 @@ There are 17 data sets included in the package:
 13. `survivor_auction`
 14. `tribe_colours`
 15. `tribe_mapping`
-16. `viewers`
+16. `episodes`
 17. `vote_history`
+18. `auction_details`
 
 See the sections below for more details on the key data sets.
 
@@ -101,7 +108,7 @@ the winner, runner ups and location.
 
 ``` r
 season_summary
-#> # A tibble: 64 × 23
+#> # A tibble: 67 × 23
 #>    version version_season season_name season n_cast location country tribe_setup
 #>    <chr>   <chr>          <chr>        <dbl>  <dbl> <chr>    <chr>   <chr>      
 #>  1 AU      AU01           Survivor A…      1     24 Upolu    Samoa   "The 24 co…
@@ -114,7 +121,7 @@ season_summary
 #>  8 AU      AU08           Survivor A…      8     24 Upolu    Samoa   "Castaways…
 #>  9 NZ      NZ01           Survivor N…      1     16 San Jua… Nicara… "Two teams…
 #> 10 NZ      NZ02           Survivor N…      2     18 Lake Va… Thaila… "Schoolyar…
-#> # ℹ 54 more rows
+#> # ℹ 57 more rows
 #> # ℹ 15 more variables: full_name <chr>, winner_id <chr>, winner <chr>,
 #> #   runner_ups <chr>, final_vote <chr>, timeslot <chr>, premiered <date>,
 #> #   ended <date>, filming_started <date>, filming_ended <date>,
@@ -149,7 +156,7 @@ found on the `vote_history`, `jury_votes` and `challenges` data sets.
 ``` r
 castaways |> 
   filter(season == 42)
-#> # A tibble: 18 × 17
+#> # A tibble: 18 × 20
 #>    version version_season season_name  season full_name     castaway_id castaway
 #>    <chr>   <chr>          <chr>         <dbl> <chr>         <chr>       <chr>   
 #>  1 US      US42           Survivor: 42     42 Jackson Fox   US0613      Jackson 
@@ -170,9 +177,10 @@ castaways |>
 #> 16 US      US42           Survivor: 42     42 Romeo Escobar US0623      Romeo   
 #> 17 US      US42           Survivor: 42     42 Mike Turner   US0620      Mike    
 #> 18 US      US42           Survivor: 42     42 Maryanne Oke… US0619      Maryanne
-#> # ℹ 10 more variables: age <dbl>, city <chr>, state <chr>, episode <dbl>,
+#> # ℹ 13 more variables: age <dbl>, city <chr>, state <chr>, episode <dbl>,
 #> #   day <dbl>, order <dbl>, result <chr>, jury_status <chr>,
-#> #   original_tribe <chr>, result_number <dbl>
+#> #   original_tribe <chr>, result_number <dbl>, jury <lgl>, finalist <lgl>,
+#> #   winner <lgl>
 ```
 
 ## Castaway details
@@ -192,7 +200,7 @@ ethnicity, the data is kept as missing rather than making an assumption.
 
 ``` r
 castaway_details
-#> # A tibble: 1,011 × 16
+#> # A tibble: 1,058 × 16
 #>    castaway_id full_name full_name_detailed castaway date_of_birth date_of_death
 #>    <chr>       <chr>     <chr>              <chr>    <date>        <date>       
 #>  1 AU0001      Des Quil… Des Quilty         Des      NA            NA           
@@ -205,7 +213,7 @@ castaway_details
 #>  8 AU0008      Kat Dumo… Kat Dumont         Katinka  1989-09-21    NA           
 #>  9 AU0009      Andrew T… Andrew Torrens     Andrew   NA            NA           
 #> 10 AU0010      Craig I'… Craig I'Anson      Craig    NA            NA           
-#> # ℹ 1,001 more rows
+#> # ℹ 1,048 more rows
 #> # ℹ 10 more variables: gender <chr>, race <chr>, ethnicity <chr>, poc <chr>,
 #> #   personality_type <chr>, lgbt <lgl>, occupation <chr>, three_words <chr>,
 #> #   hobbies <chr>, pet_peeves <chr>
@@ -227,7 +235,7 @@ idol. This details the key events for the season.
 
 There is some information on split votes to help calculate if a player
 engaged in a split vote but ultimately hit their target. There are
-events which influnce the vote e.g. Extra votes, safety without power,
+events which influence the vote e.g. Extra votes, safety without power,
 etc. These are recorded here as well.
 
 ``` r
@@ -302,21 +310,21 @@ challenge_results |>
 #>    <chr>    <int> <int>            <int>             <int>
 #>  1 Chanelle     4     7               11                 0
 #>  2 Daniel       3     4                7                 0
-#>  3 Drea         5    11               16                 0
-#>  4 Hai          5    10               15                 0
+#>  3 Drea         4    10               15                 0
+#>  4 Hai          4     9               14                 0
 #>  5 Jackson      0     1                1                 0
 #>  6 Jenny        2     2                4                 0
-#>  7 Jonathan    10    10               20                 1
-#>  8 Lindsay      9    10               19                 1
+#>  7 Jonathan     9    10               19                 1
+#>  8 Lindsay      8     9               18                 1
 #>  9 Lydia        4     5                9                 0
 #> 10 Marya        1     2                3                 0
-#> 11 Maryanne     7    13               20                 1
-#> 12 Mike         5    15               20                 2
-#> 13 Omar         6    12               18                 1
-#> 14 Rocksroy     5     8               13                 0
-#> 15 Romeo        5    15               20                 1
+#> 11 Maryanne     6    12               19                 1
+#> 12 Mike         5    14               19                 2
+#> 13 Omar         6    11               17                 1
+#> 14 Rocksroy     5     7               12                 0
+#> 15 Romeo        5    14               19                 1
 #> 16 Swati        3     3                6                 0
-#> 17 Tori         9     4               13                 0
+#> 17 Tori         8     3               12                 0
 #> 18 Zach         1     1                2                 0
 ```
 
@@ -351,7 +359,7 @@ Features:
   e.g. shooting an arrow, hitting a target, etc.
 - `endurance`: If the challenge is an endurance event e.g. last tribe,
   team, individual standing.
-- `strength`: If the challenge is largerly strength based e.g. Shoulder
+- `strength`: If the challenge is largely strength based e.g. Shoulder
   the Load.
 - `turn_based`: If the challenge is conducted in a series of rounds
   until a certain amount of points are scored or there is one player
@@ -369,29 +377,33 @@ Features:
 
 ``` r
 challenge_description
-#> # A tibble: 1,396 × 14
-#>    challenge_id challenge_name         puzzle race  precision endurance strength
-#>    <chr>        <chr>                  <lgl>  <lgl> <lgl>     <lgl>     <lgl>   
-#>  1 AU0101IM00   Throw One Over         TRUE   TRUE  FALSE     FALSE     TRUE    
-#>  2 AU0102IR01   Sacrificial Lamb       FALSE  TRUE  FALSE     FALSE     FALSE   
-#>  3 AU0103IM02   Caught in the Web      FALSE  TRUE  FALSE     FALSE     FALSE   
-#>  4 AU0103RD02   Supply Ships           TRUE   TRUE  FALSE     FALSE     FALSE   
-#>  5 AU0104IM03   Crab Pots              FALSE  TRUE  FALSE     FALSE     FALSE   
-#>  6 AU0105IM04   Nutslinger             FALSE  TRUE  TRUE      FALSE     FALSE   
-#>  7 AU0105RD04   Build It Up, Break It… FALSE  TRUE  FALSE     FALSE     FALSE   
-#>  8 AU0106IM04   Breakout               FALSE  TRUE  FALSE     FALSE     FALSE   
-#>  9 AU0107IM05   Pull Your Weight       FALSE  FALSE FALSE     TRUE      TRUE    
-#> 10 AU0107RD05   Barrel Bridge          FALSE  TRUE  FALSE     FALSE     FALSE   
-#> # ℹ 1,386 more rows
-#> # ℹ 7 more variables: turn_based <lgl>, balance <lgl>, food <lgl>,
-#> #   knowledge <lgl>, memory <lgl>, fire <lgl>, water <lgl>
+#> # A tibble: 1,731 × 25
+#>    version version_season season_name              season episode challenge_id
+#>    <chr>   <chr>          <chr>                     <dbl>   <dbl>        <dbl>
+#>  1 AU      AU01           Survivor Australia: 2016      1       1            1
+#>  2 AU      AU01           Survivor Australia: 2016      1       1            2
+#>  3 AU      AU01           Survivor Australia: 2016      1       2            3
+#>  4 AU      AU01           Survivor Australia: 2016      1       3            4
+#>  5 AU      AU01           Survivor Australia: 2016      1       3            5
+#>  6 AU      AU01           Survivor Australia: 2016      1       4            6
+#>  7 AU      AU01           Survivor Australia: 2016      1       5            7
+#>  8 AU      AU01           Survivor Australia: 2016      1       5            8
+#>  9 AU      AU01           Survivor Australia: 2016      1       6            9
+#> 10 AU      AU01           Survivor Australia: 2016      1       7           10
+#> # ℹ 1,721 more rows
+#> # ℹ 19 more variables: challenge_number <dbl>, challenge_type <chr>,
+#> #   name <chr>, recurring_name <chr>, description <chr>, reward <chr>,
+#> #   additional_stipulation <chr>, race <lgl>, endurance <lgl>,
+#> #   turn_based <lgl>, puzzle <lgl>, precision <lgl>, strength <lgl>,
+#> #   balance <lgl>, food <lgl>, knowledge <lgl>, memory <lgl>, fire <lgl>,
+#> #   water <lgl>
 
 challenge_description |> 
   summarise_if(is_logical, sum)
 #> # A tibble: 1 × 12
-#>   puzzle  race precision endurance strength turn_based balance  food knowledge
-#>    <int> <int>     <int>     <int>    <int>      <int>   <int> <int>     <int>
-#> 1     NA    NA        NA        NA       NA         NA      NA    NA        NA
+#>    race endurance turn_based puzzle precision strength balance  food knowledge
+#>   <int>     <int>      <int>  <int>     <int>    <int>   <int> <int>     <int>
+#> 1    NA        NA          0     NA        NA       NA      NA    NA        NA
 #> # ℹ 3 more variables: memory <int>, fire <int>, water <int>
 ```
 
@@ -487,16 +499,11 @@ played it for Naseer. That movement is recorded in this table.
 ``` r
 advantage_movement |> 
   filter(advantage_id == "USEV4102")
-#> # A tibble: 5 × 15
-#>   version version_season season_name  season castaway castaway_id advantage_id
-#>   <chr>   <chr>          <chr>         <dbl> <chr>    <chr>       <chr>       
-#> 1 US      US41           Survivor: 41     41 JD       US0603      USEV4102    
-#> 2 US      US41           Survivor: 41     41 Shan     US0606      USEV4102    
-#> 3 US      US41           Survivor: 41     41 Ricard   US0596      USEV4102    
-#> 4 US      US41           Survivor: 41     41 Shan     US0606      USEV4102    
-#> 5 US      US41           Survivor: 41     41 Shan     US0606      USEV4102    
-#> # ℹ 8 more variables: sequence_id <dbl>, day <dbl>, episode <dbl>, event <chr>,
-#> #   played_for <chr>, played_for_id <chr>, success <chr>, votes_nullified <dbl>
+#> # A tibble: 0 × 15
+#> # ℹ 15 variables: version <chr>, version_season <chr>, season_name <chr>,
+#> #   season <dbl>, castaway <chr>, castaway_id <chr>, advantage_id <chr>,
+#> #   sequence_id <dbl>, day <dbl>, episode <dbl>, event <chr>, played_for <chr>,
+#> #   played_for_id <chr>, success <chr>, votes_nullified <dbl>
 ```
 
 </details>
@@ -553,7 +560,7 @@ confessionals |>
 
 The confessional index is available on this data set. The index is a
 standardised measure of the number of confessionals the player has
-recieved compared to the others. It is stratified by tribe so it
+received compared to the others. It is stratified by tribe so it
 measures how many confessionals each player gets proportional to even
 share within tribe e.g. an index of 1.5 means that player as received
 50% more than others in their tribe.
@@ -701,17 +708,17 @@ still_alive("US", 42, 6)
 </details>
 <details>
 <summary>
-<strong>Viewers</strong>
+<strong>Episodes</strong>
 </summary>
 
-## Viewers
+## Episodes
 
-Viewers is an episode level table. It contains the episode information
+Episodes is an episode level table. It contains the episode information
 such as episode title, air date, length, IMDb rating and the viewer
 information for every episode across all seasons.
 
 ``` r
-viewers |> 
+episodes |> 
   filter(season == 42)
 #> # A tibble: 13 × 13
 #>    version version_season season_name  season episode_number_overall episode
@@ -732,6 +739,41 @@ viewers |>
 #> # ℹ 7 more variables: episode_title <chr>, episode_label <chr>,
 #> #   episode_date <date>, episode_length <dbl>, viewers <dbl>,
 #> #   imdb_rating <dbl>, n_ratings <dbl>
+```
+
+</details>
+<details>
+<summary>
+<strong>Survivor Auction</strong>
+</summary>
+
+## Survivor Auction
+
+There are 2 data sets, `survivor_acution` and `auction_details`.
+`survivor_auction` simply shows who attended the auction and
+`auction_details` holds the details of the auction e.g. who bought what
+and at what price.
+
+``` r
+auction_details |> 
+  filter(season == 45)
+#> # A tibble: 11 × 15
+#>    version version_season season_name  season  item item_description    category
+#>    <chr>   <chr>          <chr>         <dbl> <dbl> <chr>               <chr>   
+#>  1 US      US45           Survivor: 45     45     1 Salty pretzels and… Food an…
+#>  2 US      US45           Survivor: 45     45     2 French fries, ketc… Food an…
+#>  3 US      US45           Survivor: 45     45     3 Cheese platter, de… Food an…
+#>  4 US      US45           Survivor: 45     45     4 Chocolate milkshake Food an…
+#>  5 US      US45           Survivor: 45     45     5 Two giant fish eyes Bad item
+#>  6 US      US45           Survivor: 45     45     5 Two giant fish eyes Bad item
+#>  7 US      US45           Survivor: 45     45     6 Bowl of lollies an… Food an…
+#>  8 US      US45           Survivor: 45     45     7 Slice of pepperoni… Food an…
+#>  9 US      US45           Survivor: 45     45     8 Toothbrush and too… Comfort 
+#> 10 US      US45           Survivor: 45     45     9 Chocolate cake      Food an…
+#> 11 US      US45           Survivor: 45     45    10 Pbandj sandwich, c… Food an…
+#> # ℹ 8 more variables: castaway <chr>, castaway_id <chr>, cost <dbl>,
+#> #   covered <lgl>, money_remaining <dbl>, auction_num <dbl>,
+#> #   participated <chr>, notes <chr>
 ```
 
 </details>
@@ -756,11 +798,11 @@ me directly](http://gradientdescending.com/contact/).
 
 [**Carly Levitz**](https://twitter.com/carlylevitz) has developed a
 fantastic
-[dashboard](https://public.tableau.com/app/profile/carly.levitz/viz/SurvivorCBSData-Acknowledgements/Acknowledgements)
+[dashboard](https://public.tableau.com/app/profile/carly.levitz/viz/SurvivorCBSData-Acknowledgements/Tableofcontents)
 showcasing the data and allowing you to drill down into seasons,
 castaways, voting history and challenges.
 
-[<img src='dev/images/dash.png' align="center"/>](https://public.tableau.com/app/profile/carly.levitz/viz/SurvivorCBSData-Acknowledgements/Acknowledgements)
+[<img src='dev/images/dash.png' align="center"/>](https://public.tableau.com/app/profile/carly.levitz/viz/SurvivorCBSData-Acknowledgements/Tableofcontents)
 
 ## Data viz
 
@@ -780,10 +822,10 @@ A big thank you to:
 
 #### Data contributors
 
-- [**Dario Mavec**](https://github.com/dariomavec) for developing the
-  face detection model for estimating total screen time
 - [**Sam**](https://twitter.com/survivorfansam) for contributing to the
   confessional counts
+- [**Dario Mavec**](https://github.com/dariomavec) for developing the
+  face detection model for estimating total screen time
 - **Camilla Bendetti** for collating the personality type data for each
   castaway.
 - **Uygar Sozer** for adding the filming start and end dates for each

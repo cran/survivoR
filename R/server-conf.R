@@ -44,6 +44,12 @@ conf_app_server <- function(input, output, session) {
       }
     })
 
+    output$castaway_adj <- renderUI({
+      if(input$value_adj == "Change castaway") {
+        selectInput("change_castaway", label = "Castaway", choices = df()$cast$castaway)
+      }
+    })
+
     # create selector UI ------------------------------------------------------
 
     df_valid_selection <- read_csv(
@@ -82,6 +88,16 @@ conf_app_server <- function(input, output, session) {
 
     })
 
+    output$file_selector <- renderUI({
+
+      .season <- str_pad(input$season, side = "left", width = 2, pad = 0)
+      .episode <- str_pad(input$episode, side = "left", width = 2, pad = 0)
+      .vs <- paste0(input$version, .season)
+      staging_files_ls <- c("New file", list.files(paste0(input$path, "/", .vs, "/", input$episode), pattern = "staging"))
+      selectInput("staging_file", "Load file / Start new file", choices = staging_files_ls)
+
+    })
+
     # start button counter ----------------------------------------------------
 
     observeEvent(input$create_file, {
@@ -114,7 +130,12 @@ conf_app_server <- function(input, output, session) {
       .season <- str_pad(input$season, side = "left", width = 2, pad = 0)
       .episode <- str_pad(input$episode, side = "left", width = 2, pad = 0)
       .vs <- paste0(input$version, .season)
-      .time <- format(now(), "%Y-%m-%d %Hh%Mm%Ss")
+
+      if(input$staging_file == "New file") {
+        .time <- format(now(), "%Y-%m-%d %Hh%Mm%Ss")
+      } else {
+        .time <- str_extract(input$staging_file, "[:digit:]{4}-[:digit:]{2}-[:digit:]{2} [:digit:]{2}h[:digit:]{2}m[:digit:]{2}s")
+      }
 
       valid_selection$id <- TRUE
 
@@ -228,6 +249,56 @@ conf_app_server <- function(input, output, session) {
           distinct(tribe, tribe_colour)
       )
 
+    })
+
+    # loading data from file if needed
+    observeEvent(input$create_file, {
+
+      if(input$staging_file != "New file") {
+        .time <- str_extract(input$staging_file, "[:digit:]{4}-[:digit:]{2}-[:digit:]{2} [:digit:]{2}h[:digit:]{2}m[:digit:]{2}s")
+        .file <- paste0(input$path, "/", createFile()$vs, "/", input$episode, "/", input$staging_file)
+        df_load <- read_csv(
+          .file,
+          col_names = c("global_id", "id", "castaway", "action", "time"),
+          col_types = cols()
+        )
+        cfnl$id <- max(df_load$id)
+        global_stamp$id <- max(df_load$global_id)
+        .edit <- str_replace(.file, "staging", "edits")
+
+        # preset time stamps with loaded
+        timestamps$staging <- df_load
+        if(file.exists(.edit)) {
+          timestamps$edits <- read_csv(
+            .edit,
+            col_names = c("id", "value", "change_castaway"),
+            col_types = cols()
+          )
+        } else {
+          timestamps$edits <- NULL
+        }
+
+        # apply edits first
+        if(!is.null(timestamps$edits)) {
+          timestamps$final <- apply_edits(timestamps$staging, timestamps$edits)
+        } else {
+          timestamps$final <- timestamps$staging
+        }
+        df_timing_tbl <- get_confessional_timing(
+          timestamps$final,
+          .vs = createFile()$vs,
+          .episode = as.numeric(input$episode))
+
+        # refresh duration
+        lapply(
+          uiid,
+          function(.uiid) {
+            .castaway <- df()$cast$castaway[which(df()$cast$uiid == .uiid)]
+            ts[[.uiid]]$duration <- df_timing_tbl$confessional_time[which(df_timing_tbl$castaway == .castaway)]
+          }
+        )
+
+      }
     })
 
     # creates the UI components -----------------------------------------------
@@ -403,7 +474,7 @@ conf_app_server <- function(input, output, session) {
             }
 
             # insert time stamp in log
-            col <- ifelse(ts[[.uiid]]$prev_action == "start", "red", "green")
+            col <- ifelse(ts[[.uiid]]$prev_action == "start", "green", "red")
             insertUI(
               selector = "#timestamps",
               ui = tags$span(
@@ -462,7 +533,8 @@ conf_app_server <- function(input, output, session) {
 
       df_edits <- data.frame(
         id = input$id_adj,
-        value = input$value_adj
+        value = input$value_adj,
+        change_castaway = ifelse(input$value_adj == "Change castaway", input$change_castaway, NA)
       )
 
       # append to df
@@ -475,7 +547,8 @@ conf_app_server <- function(input, output, session) {
         write_csv(
           df_edits,
           file = createFile()$path_edits,
-          append = TRUE
+          append = TRUE,
+          col_names = FALSE
         )
 
       }
@@ -490,6 +563,18 @@ conf_app_server <- function(input, output, session) {
 
       }
 
+      old_castaway <- timestamps$staging %>%
+        filter(id == input$id_adj) %>%
+        distinct(castaway) %>%
+        pull(castaway)
+      if(input$value_adj == "Change castaway") {
+        stamp_note <- paste(old_castaway, ">", input$change_castaway)
+      } else if(input$value_adj == "Delete"){
+        stamp_note <- paste(old_castaway, "> <span class='stamp' style='color:red;'>Deleted</span>")
+      } else {
+        stamp_note <- paste(old_castaway, ">", sgn(input$value_adj), "seconds")
+      }
+
       # insert time stamp in log
       insertUI(
         selector = "#timestamps",
@@ -498,7 +583,7 @@ conf_app_server <- function(input, output, session) {
             "</strong><span class='stamp' style='color:blue;'>[adjustment] ID",
             input$id_adj,
             ": ",
-            ifelse(is.na(input$value_adj), "", input$value_adj),
+            stamp_note,
             "</span>",
             "<br>"
           ),

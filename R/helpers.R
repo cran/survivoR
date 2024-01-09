@@ -3,7 +3,7 @@ utils::globalVariables(c("action", "castaway", "castaway_id", "confessional_coun
                          "duration", "episode", "start", "time", "time_between", "version_season",
                          "season_summary", "n_start", "n_stop", "global_id", "id0", "confApp",
                          "original_tribe", "season", "tribe_colour", "tribe_status", "value",
-                         "num", "tribe"))
+                         "num", "tribe", "change_castaway"))
 
 #' Castaway images
 #'
@@ -29,7 +29,7 @@ get_castaway_image <- function(castaway_ids, version_season) {
 #' Launch Confessional App
 #'
 #' Launches the confessional timing app in either a browser or viewer. Default is set to
-#' browser. The user is required to provide a path for which the time stanps are recoreded.
+#' browser. The user is required to provide a path for which the time stamps are recorded.
 #'
 #' @param browser Open in browser instead of viewer. Default \code{TRUE}
 #' @param path Parent directory for output files. Default is a sub-folder \code{'confessional-timing'}
@@ -54,7 +54,7 @@ get_castaway_image <- function(castaway_ids, version_season) {
 #' if(interactive()) {
 #'
 #'   # launch app
-#'   launch_confessional_app()
+#'   # launch_confessional_app()
 #'
 #' }
 #'

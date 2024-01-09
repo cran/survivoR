@@ -7,7 +7,7 @@
 #'   \item{\code{version}}{Country code for the version of the show}
 #'   \item{\code{version_season}}{Version season key}
 #'   \item{\code{season_name}}{Season name}
-#'   \item{\code{season}}{Sesaon number}
+#'   \item{\code{season}}{Season number}
 #'   \item{\code{n_cast}}{Number of cast in the season}
 #'   \item{\code{location}}{Location of the season}
 #'   \item{\code{country}}{Country the season was held}
@@ -42,7 +42,7 @@
 #' \describe{
 #'   \item{\code{version}}{Country code for the version of the show}
 #'   \item{\code{version_season}}{Version season key}
-#'   \item{\code{season}}{Sesaon number}
+#'   \item{\code{season}}{Season number}
 #'   \item{\code{season_name}}{Season name}
 #'   \item{\code{full_name}}{Full name of the castaway}
 #'   \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano. The first two letters reference the country of the version played e.g. US, AU (TBA).}
@@ -58,10 +58,13 @@
 #'   \item{\code{result_number}}{Result number i.e. the final place. NA for castaways that were voted out but later returned e.g. Redemption Island}
 #'   \item{\code{jury_status}}{Jury status}
 #'   \item{\code{original_tribe}}{Original tribe name}
+#'   \item{\code{finalist}}{Logical. \code{TRUE} if the castaway was a finalists}
+#'   \item{\code{jury}}{Logical. \code{TRUE} if the castaway was a jury member}
+#'   \item{\code{winner}}{Logical. \code{TRUE} if the castaway was the winner}
 #' }
 #'
-#' @details If the original \code{castaway_id} is desired simply extract the digits from the ID e.g.
-#' \code{castaway_id = as.numeric(str_extract(castaway_id, '[:digit:]+'))} in a mutate step.
+#' @details Note that in the seasons where castaways returned to the game e.g. Redemption Island, a castaway may
+#' appear twice.
 #'
 #' @import tidyr
 #'
@@ -281,6 +284,29 @@
 #' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}
 "viewers"
 
+#' Episodes
+#'
+#' A dataset containing details for each episode
+#'
+#' @format This data frame contains the following columns:
+#' \describe{
+#'   \item{\code{version}}{Country code for the version of the show}
+#'   \item{\code{version_season}}{Version season key}
+#'   \item{\code{season_name}}{The season name}
+#'   \item{\code{season}}{Season number}
+#'   \item{\code{episode_number_overall}}{The cumulative episode number}
+#'   \item{\code{episode}}{Episode number for the season}
+#'   \item{\code{episode_title}}{Episode title}
+#'   \item{\code{episode_label}}{A standardised episode label}
+#'   \item{\code{episode_date}}{Date the episode aired}
+#'   \item{\code{episode_length}}{Episode length in minutes}
+#'   \item{\code{viewers}}{Number of viewers (millions) who tuned in}
+#'   \item{\code{imdb_rating}}{IMDb rating for the episode on a scale of 0-10}
+#'   \item{\code{n_ratings}}{The number of ratings submitted to IMDb}
+#' }
+#' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}
+"episodes"
+
 #' Season palettes
 #'
 #' A dataset containing palettes generated from the season logos
@@ -312,15 +338,13 @@
 #'   \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano. The first two letters reference the country of the version played e.g. US, AU (TBA).}
 #'   \item{\code{castaway}}{Name of castaway. Generally this is the name they were most commonly referred to
 #'   or nickname e.g. no one called Coach, Benjamin. He was simply Coach}
-#'   \item{\code{challenge_name}}{The name of the challenge. Challenges can go by different names but where possible
-#'   recurring challenges are kept consistent. While there are tweaks to the challenges where the main components of
-#'   the challenge consistent they share the same name}
-#'   \item{\code{outcome_type}}{Whether the challenge is individual or tribal. Some individual reward challenges may involve multiple castawats as the winner gets to choose who they bring along}
+#'   \item{\code{outcome_type}}{Whether the challenge is individual or tribal. Some individual reward challenges may involve multiple castaways as the winner gets to choose who they bring along}
 #'   \item{\code{tribe}}{Current tribe the castaway is on}
 #'   \item{\code{tribe_status}}{The status of the tribe e.g. original, swapped, merged, etc. See details for more}
 #'   \item{\code{challenge_type}}{The challenge type e.g. immunity, reward, etc}
 #'   \item{\code{challenge_id}}{Primary key to the \code{challenge_description} data set which contains features of the challenge}
 #'   \item{\code{result}}{Result of challenge}
+#'   \item{\code{result_notes}}{Additional notes about the result of the challenge}
 #'   \item{\code{chosen_for_reward}}{If after the reward challenge the castaway was chosen to participate in the reward}
 #'   \item{\code{sit_out}}{\code{TRUE} if they sat out of the challenge or \code{FALSE} if they participate}
 #' }
@@ -339,16 +363,27 @@
 #'
 #' @format This data frame contains the following columns:
 #' \describe{
+#'   \item{\code{version}}{Country code for the version of the show}
+#'   \item{\code{version_season}}{Version season key}
+#'   \item{\code{season_name}}{The season name}
+#'   \item{\code{season}}{The season number}
+#'   \item{\code{episode}}{Episode number}
 #'   \item{\code{challenge_id}}{Primary key}
-#'   \item{\code{challenge_name}}{The name of the challenge. Challenges can go by different names but where possible
-#'   recurring challenges are kept consistent. While there are tweaks to the challenges where the main components of
-#'   the challenge consistent they share the same name}
-#'   \item{\code{puzzle}}{If the challenge contains a puzzle element}
+#'   \item{\code{challenge_number}}{}
+#'   \item{\code{challenge_type}}{}
+#'   \item{\code{name}}{The name of the challenge}
+#'   \item{\code{recurring_name}}{Challenges can go by different names but are often associated with a particular challenge or element
+#'   of a challenge. Some challenges use combinations of other challenges so it's not perfect but consistent with the wiki page.
+#'   Use \code{recurring_name} to analyse how often a challenge has been run.}
+#'   \item{\code{description}}{Description of the challenge}
+#'   \item{\code{reward}}{Description of the reward}
+#'   \item{\code{additional_stipulation}}{Some challenges come with various rules or success criteria. This states those conditions.}
 #'   \item{\code{race}}{If the challenge is a race between tribes, teams or individuals}
-#'   \item{\code{precision}}{If the challenge contains a precision element e.g. shooting an arrow, hitting a target, etc}
 #'   \item{\code{endurance}}{If the challenge is an endurance event e.g. last tribe, team, individual standing}
-#'   \item{\code{strength}}{If the challenge has a strength based}
 #'   \item{\code{turn_based}}{If the challenge is turn bases i.e. conducted in rounds}
+#'   \item{\code{puzzle}}{If the challenge contains a puzzle element}
+#'   \item{\code{precision}}{If the challenge contains a precision element e.g. shooting an arrow, hitting a target, etc}
+#'   \item{\code{strength}}{If the challenge has a strength based}
 #'   \item{\code{balance}}{If the challenge contains a balancing element. My refer to the player balancing on something or
 #'   the player balancing an object on something e.g. The Ball Drop}
 #'   \item{\code{food}}{If the challenge contains a food element e.g. the food challenge, biting off chunks of meat}
@@ -358,7 +393,7 @@
 #'   \item{\code{water}}{If the challenge is held, in part, in the water}
 #' }
 #'
-#' @details The features of each challenge have been determined largely through string searches of key words or phraces in the
+#' @details The features of each challenge have been determined largely through string searches of key words or phrases in the
 #' challenge description. It may not capture the full essence of the challenge but on the whole will provide a good basis for
 #' analysis.
 #'
@@ -483,13 +518,13 @@
 #'   \item{\code{castaway}}{Name of the castaway involved in the event e.g. found, played, received, etc.}
 #'   \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano. The first two letters reference the country of the version played e.g. US, AU.}
 #'   \item{\code{advantage_id}}{The ID / primary key of the advantage}
-#'   \item{\code{sequence_id}}{The sequnnce of events. For example `sequence_id == 1` usually means the advantage was found. Each subsequent event follows the `sequence_id`}
-#'   \item{\code{day}}{The day the event occured}
-#'   \item{\code{episode}}{The episode the event occured}
+#'   \item{\code{sequence_id}}{The sequence of events. For example `sequence_id == 1` usually means the advantage was found. Each subsequent event follows the `sequence_id`}
+#'   \item{\code{day}}{The day the event occurred}
+#'   \item{\code{episode}}{The episode the event occurred}
 #'   \item{\code{event}}{The event e.g. the advantage was found, played, received, etc}
 #'   \item{\code{played_for}}{If the advantage or idol was played this records who it was played for}
 #'   \item{\code{played_for_id}}{the ID for who the advantage or idol was played for}
-#'   \item{\code{success}}{If the play was succesful or not. Only relavent for advantages since playing a hidden immunity idol is always sucessful in terms of saving who it was played for.}
+#'   \item{\code{success}}{If the play was successful or not. Only relevant for advantages since playing a hidden immunity idol is always successful in terms of saving who it was played for.}
 #'   \item{\code{votes_nullified}}{In the case of hidden immunity idols this is the count of how many votes were nullified when played}
 #' }
 "advantage_movement"
@@ -558,7 +593,9 @@
 
 #' Survivor Auction
 #'
-#' A dataset showing who attended the Survivor Auction during the seasons they were held
+#' A dataset showing who attended the Survivor Auction during the seasons they were held.
+#' \code{survivor_auction} is at the castaway level and includes all castaways whether or not
+#' they purchased an item and \code{auction_details} is at the item level.
 #'
 #' @format This data frame contains the following columns:
 #' \describe{
@@ -573,5 +610,47 @@
 #'   or nickname e.g. no one called Coach, Benjamin. He was simply Coach}
 #'   \item{\code{tribe_status}}{The status of the tribe e.g. original, swapped, merged, etc. See details for more}
 #'   \item{\code{tribe}}{Tribe name}
+#'   \item{\code{currency}}{Currency}
+#'   \item{\code{total}}{Total amount either given to or found by the castaway}
 #' }
+#'
 "survivor_auction"
+
+#' Survivor Auction Details
+#'
+#' The details of the items purchased at the Survivor Auction.
+#' \code{survivor_auction} is at the castaway level and includes all castaways whether or not
+#' they purchased an item and \code{auction_details} is at the item level.
+#'
+#' @format This data frame contains the following columns:
+#' \describe{
+#'   \item{\code{version}}{Country code for the version of the show}
+#'   \item{\code{version_season}}{Version season key}
+#'   \item{\code{season_name}}{The season name}
+#'   \item{\code{season}}{The season number}
+#'   \item{\code{item}}{Item number}
+#'   \item{\code{item_description}}{Item description}
+#'   \item{\code{category}}{The item category. See details for more.}
+#'   \item{\code{castaway}}{Castaway}
+#'   \item{\code{castaway_id}}{Castaway ID}
+#'   \item{\code{covered}}{If the item was covered or not}
+#'   \item{\code{cost}}{The amount paid for the item}
+#'   \item{\code{money_remaining}}{How much money the castaway has remaining}
+#'   \item{\code{auction_num}}{If the same item is auctioned for a second time it has a value of 2}
+#'   \item{\code{participated}}{The names of castaways that could participate in the purchased item e.g. sharing a tub of peanut butter with the tribe}
+#'   \item{\code{notes}}{Additional notes}
+#'   \item{\code{alternative_offered}}{If and alternative was offered to the player after purchase}
+#'   \item{\code{alternative_accepted}}{If they accepted the alternative offer}
+#'   \item{\code{other_item}}{Description of the refused item}
+#'   \item{\code{other_item_category}}{Category of the refused item}
+#' }
+#'
+#' @details
+#' Each item has been categorised into 5 main categories:
+#' 1. Food and drink: The most common item. It may be simply food or drink, not necessarily both.
+#' 2. Comfort: Things like a shower, toothpaste, etc
+#' 3. Letters from home
+#' 4. Advantage: Could be a clue to a hidden immunity idol, advantage in the next challenge, or in the current auction
+#' 5. Bad item: The not good item, typically one of the covered items. Whether or not it's actually bad is subjective, but where someone
+#' is hoping for pizza and gets bat soup I consider it a bad item.
+"auction_details"
