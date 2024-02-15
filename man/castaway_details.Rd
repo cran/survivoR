@@ -15,15 +15,19 @@ This data frame contains the following columns:
   \item{\code{date_of_birth}}{Date of birth}
   \item{\code{date_of_death}}{Date of death}
   \item{\code{gender}}{Gender of castaway}
-  \item{\code{race}}{Race (if known)}
-  \item{\code{ethnicity}}{Ethnicity (if known)}
-  \item{\code{poc}}{POC indicator if known and can point to a source, else marked as white. It is understood this is a contentious issue and ultimately up to the individual as to how they wish to be identified. Please log corrections on the Github page.}
-  \item{\code{personality_type}}{The Myer-Briggs personality type of the castaway}
+  \item{\code{african}}{\code{TRUE} if African-American or African-Canadian as per \url{https://survivor.fandom.com/wiki/Main_Page}}
+  \item{\code{asian}}{\code{TRUE} if Asian-American or Asian-Canadian as per \url{https://survivor.fandom.com/wiki/Main_Page}}
+  \item{\code{latin_american}}{\code{TRUE} if Latin-American as per \url{https://survivor.fandom.com/wiki/Main_Page}}
+  \item{\code{native_american}}{\code{TRUE} if Native-American as per \url{https://survivor.fandom.com/wiki/Main_Page}}
+  \item{\code{bipoc}}{Black, Indigenous, or Person of Colour}
   \item{\code{lgbt}}{LGBTQIA+ status as listed on the survivor wiki.}
+  \item{\code{personality_type}}{The Myer-Briggs personality type of the castaway}
   \item{\code{occupation}}{Occupation}
   \item{\code{three_words}}{Answer to the question "three words to describe you?"}
   \item{\code{hobbies}}{Answer to the question "what are you favourite hobbies?"}
   \item{\code{pet_peeves}}{Answer to the question "what are your pet peeves?"}
+  \item{\code{race}}{Race (if known)}
+  \item{\code{ethnicity}}{Ethnicity (if known)}
 }
 }
 \source{
@@ -39,6 +43,9 @@ A dataset containing details on the castaways for each season
 \details{
 Race and ethnicity data is included if known and can point to a source, rather than making an assumption
 about an individual.
+
+\code{poc} has been deprecated and replaced with \code{bipoc} which is now logical and only for the US. \code{bipoc} is
+\code{TRUE} if any of \code{african}, \code{asian}, \code{latin_american}, or \code{native_american} is \code{TRUE}.
 }
 \examples{
 library(dplyr)

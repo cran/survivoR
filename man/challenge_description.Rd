@@ -26,15 +26,36 @@ This data frame contains the following columns:
   \item{\code{endurance}}{If the challenge is an endurance event e.g. last tribe, team, individual standing}
   \item{\code{turn_based}}{If the challenge is turn bases i.e. conducted in rounds}
   \item{\code{puzzle}}{If the challenge contains a puzzle element}
+  \item{\code{puzzle_slide}}{If the challenge contained a slide puzzle}
+  \item{\code{puzzle_word}}{If the challenge contained a word puzzle}
   \item{\code{precision}}{If the challenge contains a precision element e.g. shooting an arrow, hitting a target, etc}
+  \item{\code{precision_catch}}{If the challenge featured catching a ball or similar}
+  \item{\code{precision_roll_ball}}{If the challenge featured rolling a ball}
+  \item{\code{precision_slingshot}}{If the challenge featured a slingshot, either the large version or handheld version}
+  \item{\code{precision_throw_balls}}{If the challenge featured throwing balls}
+  \item{\code{precision_throw_coconuts}}{If the challenge featured throwing coconuts}
+  \item{\code{precision_throw_rings}}{if the challenge featured throwing rings}
+  \item{\code{precision_throw_sandbags}}{if the challenge featured throwing sandbags}
   \item{\code{strength}}{If the challenge has a strength based}
   \item{\code{balance}}{If the challenge contains a balancing element. My refer to the player balancing on something or
   the player balancing an object on something e.g. The Ball Drop}
+  \item{\code{balance_beam}}{If the challenge featured a balance beam of similar they were required to balance on}
+  \item{\code{balance_ball}}{If the challenge featured balancing a ball on something}
   \item{\code{food}}{If the challenge contains a food element e.g. the food challenge, biting off chunks of meat}
   \item{\code{knowledge}}{If the challenge contains a knowledge component e.g. Q and A about the location}
   \item{\code{memory}}{If the challenge contains a memory element e.g. memorising a sequence of items}
   \item{\code{fire}}{If the challenge contains an element of fire making / maintaining}
   \item{\code{water}}{If the challenge is held, in part, in the water}
+  \item{\code{water_swim}}{If castaways had to swim in the challenge}
+  \item{\code{water_paddling}}{If castwways were required to paddle a boat or similar}
+  \item{\code{obstacle_blindfolded}}{If the challenge required castaways to be blindfolded}
+  \item{\code{obstacle_cargo_net}}{If the challenge featured a cargo net}
+  \item{\code{obstacle_chopping}}{If castaways were required to chop a rope or similar}
+  \item{\code{obstacle_combination_lock}}{If the challenge feature a combination lock}
+  \item{\code{obstacle_digging}}{If the challenge involved digging}
+  \item{\code{obstacle_knots}}{If the challenge involved untying knots}
+  \item{\code{obstacle_padlocks}}{If the challenge featured opening padlocks}
+  \item{\code{mud}}{If the challenge required castaways to get covered in mud}
 }
 }
 \source{
@@ -47,11 +68,22 @@ challenge_description
 A dataset detailing the challenges played and the elements they include over all seasons of Survivor
 }
 \details{
-The features of each challenge have been determined largely through string searches of key words or phrases in the
-challenge description. It may not capture the full essence of the challenge but on the whole will provide a good basis for
-analysis.
+This data set contains the name, description, and descriptive features for each
+challenge where it is known. Challenges can go by different names so have included the
+unique name and the recurring challenge name. These are taken directly from the
+[Survivor Wiki](https://survivor.fandom.com/wiki/Category:Recurring_Challenges).
+Sometimes there can be variations made on the challenge but go but the same name, or
+the challenge is integrated with a longer obstacle. In these cases the challenge may
+share the same recurring challenge name but have a different challenge name. Even if
+they share the same names the description could be different.
 
-Please log any suggested corrections at \url{https://github.com/doehm/survivoR}
+The features of each challenge have been determined largely through string searches
+of key words that describe the challenge. It may not be 100% accurate due to the
+different and inconsistent descriptions but in most part they will provide a good
+basis for analysis.
+
+If any descriptive features need altering please let me know in the
+[issues](https://github.com/doehm/survivoR/issues).
 
 For updated data please see the git version.
 }
