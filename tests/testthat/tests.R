@@ -49,7 +49,7 @@ test_that("Individual immunity assigned on vote history", {
     filter(tribe_status == "Merged") |>
     filter(vote_order == 1) |>
     group_by(version_season, version, season, episode, order) |>
-    summarise(immunity_winner = sum(immunity == "Individual", na.rm = TRUE)) |>
+    summarise(immunity_winner = sum(immunity %in% c("Individual", "Earned merge"), na.rm = TRUE)) |>
     filter(immunity_winner == 0)
 
   expect_equal(nrow(nobody_immune), 4)
@@ -78,7 +78,7 @@ test_that("Winners on challenge_results match immunity on vote_history", {
     ) |>
     nrow()
 
-  expect_equal(x1, 15)
+  expect_equal(x1, 14)
 })
 
 test_that("Jury votes matches 'jury' on castaways", {
@@ -99,5 +99,61 @@ test_that("Jury votes matches 'jury' on castaways", {
     nrow()
 
   expect_equal(castaway, 0)
+
+})
+
+test_that("Challenge summary and challenge results are the same size", {
+  x1 <- challenge_summary |>
+    distinct(version_season, challenge_id) |>
+    nrow()
+
+  x2 <- challenge_results |>
+    filter(version == "US") |>
+    distinct(version_season, challenge_id) |>
+    nrow()
+
+  expect_equal(x1, x2)
+})
+
+
+test_that("More than one winner", {
+  x <- castaways |>
+    group_by(version_season) |>
+    summarise(
+      n_jury = sum(jury),
+      n_finalist = sum(finalist),
+      n_winner = sum(winner)
+    ) |>
+    filter(n_winner != 1) |>
+    nrow()
+
+  expect_equal(x, 0)
+})
+
+
+test_that("Jury count the same on castaways and jury votes", {
+
+  x <- castaways |>
+    group_by(version_season) |>
+    summarise(
+      n_jury = sum(jury),
+      n_finalist = sum(finalist),
+      n_winner = sum(winner)
+    ) |>
+    left_join(
+      jury_votes |>
+        group_by(version_season) |>
+        summarise(
+          n_jury_jv = n_distinct(castaway_id),
+          n_finalist_jv = n_distinct(finalist_id)
+        ),
+      by = "version_season"
+    ) |>
+    filter(
+      n_jury != n_jury_jv | n_finalist != n_finalist_jv
+    ) |>
+    nrow()
+
+  expect_equal(x, 2)
 
 })

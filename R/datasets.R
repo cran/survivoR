@@ -1,6 +1,6 @@
 #' Season summary
 #'
-#' A dataset containing a summary of all 40 seasons of Survivor
+#' A dataset containing a summary of all seasons of Survivor
 #'
 #' @format This data frame contains the following columns:
 #' \describe{
@@ -34,7 +34,7 @@
 #'
 #' @import tidyr
 #'
-#' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}
+#' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}  \url{https://survivor.fandom.com/wiki/Main_Page}
 "season_summary"
 
 #' Castaways
@@ -71,7 +71,7 @@
 #'
 #' @import tidyr
 #'
-#' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}
+#' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}  \url{https://survivor.fandom.com/wiki/Main_Page}
 #' @examples
 #' library(dplyr)
 #' castaways %>%
@@ -313,6 +313,7 @@
 #'   \item{\code{viewers}}{Number of viewers (millions) who tuned in}
 #'   \item{\code{imdb_rating}}{IMDb rating for the episode on a scale of 0-10}
 #'   \item{\code{n_ratings}}{The number of ratings submitted to IMDb}
+#'   \item{\code{episode_summary}}{Description of the episode from wikipedia}
 #' }
 #' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}
 "episodes"
@@ -355,11 +356,13 @@
 #'   \item{\code{challenge_id}}{Primary key to the \code{challenge_description} data set which contains features of the challenge}
 #'   \item{\code{result}}{Result of challenge}
 #'   \item{\code{result_notes}}{Additional notes about the result of the challenge}
+#'   \item{\code{order_of_finish}}{Order of finish for tribal challenges. Useful when there are 3 or more tribes to see who actually came first, second and who lost the challenge.}
 #'   \item{\code{chosen_for_reward}}{If after the reward challenge the castaway was chosen to participate in the reward}
 #'   \item{\code{sit_out}}{\code{TRUE} if they sat out of the challenge or \code{FALSE} if they participate}
+#'   \item{\code{team}}{Team allocation when they are split into teams}
 #' }
 #'
-#' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}
+#' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}  \url{https://survivor.fandom.com/wiki/Main_Page}
 #' @examples
 #' library(dplyr)
 #' library(tidyr)
@@ -443,7 +446,7 @@
 #'
 #' For updated data please see the git version.
 #'
-#' @source \url{https://survivor.fandom.com/wiki/Category:Challenges}
+#' @source \url{https://survivor.fandom.com/wiki/Category:Challenges}  \url{https://survivor.fandom.com/wiki/Main_Page}
 #' @examples
 #' library(dplyr)
 #' library(tidyr)
@@ -476,7 +479,7 @@
 #' is useful for observing the changes in tribe make either due to castaways being voted
 #' off the island, tribe swaps, who is on Redemption Island and Edge of Extinction.
 #'
-#' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}
+#' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}  \url{https://survivor.fandom.com/wiki/Main_Page}
 "tribe_mapping"
 
 #' Boot mapping
@@ -502,7 +505,7 @@
 #'   is on Redemption Island or Edge of Extinction.}
 #' }
 #'
-#' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}
+#' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}  \url{https://survivor.fandom.com/wiki/Main_Page}
 "boot_mapping"
 
 #' Confessionals
@@ -656,6 +659,7 @@
 #'   \item{\code{total}}{Total amount either given to or found by the castaway}
 #' }
 #'
+#' @source  \url{https://survivor.fandom.com/wiki/Main_Page}
 "survivor_auction"
 
 #' Survivor Auction Details
@@ -695,4 +699,53 @@
 #' 4. Advantage: Could be a clue to a hidden immunity idol, advantage in the next challenge, or in the current auction
 #' 5. Bad item: The not good item, typically one of the covered items. Whether or not it's actually bad is subjective, but where someone
 #' is hoping for pizza and gets bat soup I consider it a bad item.
+#'
+#' @source  \url{https://survivor.fandom.com/wiki/Main_Page}
 "auction_details"
+
+#' Challenge Summary
+#'
+#' A dataset summarising \code{challenge_results}
+#'
+#' @format This data frame contains the following columns
+#' \describe{
+#'   \item{\code{category}}{The category of the challenge e.g. tribal, individual, individual immunity, duel, etc. This makes it easy
+#'   to split out the difference types of challenges and avoid complications such as 'Team / Individual' challenges where there is a
+#'   dependent outcome structure. Join to \code{challenge_results} using \code{challenge_id}, \code{version_season} and \code{castaway_id}}
+#'   \item{\code{version_season}}{Version season key}
+#'   \item{\code{challenge_id}}{Primary key to the \code{challenge_description} data set which contains features of the challenge}
+#'   \item{\code{challenge_type}}{The challenge type e.g. immunity, reward, etc}
+#'   \item{\code{outcome_type}}{Whether the challenge is individual or tribal. Some individual reward challenges may involve multiple castaways as the winner gets to choose who they bring along}
+#'   \item{\code{tribe}}{Current tribe the castaway is on}
+#'   \item{\code{castaway}}{Name of castaway. Generally this is the name they were most commonly referred to
+#'   or nickname e.g. no one called Coach, Benjamin. He was simply Coach}
+#'   \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano. The first two letters reference the country of the version played e.g. US, AU (TBA).}
+#'   \item{\code{n_entities}}{Number of entities competing for the win e.g. the number of tribes, teams, or people.}
+#'   \item{\code{n_winners}}{Number of winners (or winning entities) e.g. if there are two tribes there is only one winning tribe, if there
+#'   are three tribes like the new era there are two winning tribes and one that goes to tribal council.}
+#'   \item{\code{n_in_team}}{The number of people in the tribe or team}
+#'   \item{\code{won}}{If the castaway won}
+#' }
+#'
+#' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)} \url{https://survivor.fandom.com/wiki/Main_Page}
+#' @examples
+#' library(dplyr)
+#' library(tidyr)
+#' challenge_summary %>%
+#'   filter(version_season == 46)
+"challenge_summary"
+
+#' Episode summary
+#'
+#' A dataset containing a summary of all US episodes seasons of Survivor
+#'
+#' @format This data frame contains the following columns:
+#' \describe{
+#'   \item{\code{version}}{Country code for the version of the show}
+#'   \item{\code{version_season}}{Version season key}
+#'   \item{\code{episode}}{Episode number}
+#'   \item{\code{episode_summary}}{summary of the episode}
+#' }
+#'
+#' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}
+"episode_summary"
