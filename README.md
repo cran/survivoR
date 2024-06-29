@@ -3,7 +3,7 @@
 
 # survivoR <img src='dev/images/hex-flame-final.png' align="right" height="240" />
 
-69 seasons. 1100 people. 1 package!
+69 seasons. 1301 people. 1 package!
 
 survivoR is a collection of data sets detailing events across 69 seasons
 of Survivor US, Australia, South Africa, New Zealand and UK. It includes
@@ -12,7 +12,7 @@ winners, jury votes, advantage details and a lot more.
 
 # Installation
 
-Now on CRAN (v2.3.2) or Git (v2.3.3).
+Now on CRAN (v2.3.2) or Git (v2.3.4).
 
 If Git \> CRAN I’d suggest install from Git. We are constantly improving
 the data sets so the github version is likely to be slightly improved.
@@ -24,6 +24,20 @@ install.packages("survivoR")
 ``` r
 devtools::install_github("doehm/survivoR")
 ```
+
+# News: survivoR 2.3.4
+
+<img src='https://img.shields.io/badge/col-new-green'/>
+
+- Adding a new key `sog_id` (stage of game ID) to `boot_mapping`,
+  `challenge_results`, and `vote_history`. This makes it easier to join
+  those tables and reference a particular stage of the game. The stage
+  of the game is determined by a change in players/tribe setup
+  e.g. whenever someone is voted out, medically evacuated, switches
+  tribes, or simply starting a new episode the `sog_id` increase by 1.
+  This is now available but still being developed and running a bunch of
+  tests, so please let me know if there are inconsistencies.
+- `n_boots` is now on `boot_mapping`.
 
 # News: survivoR 2.3.3
 
@@ -48,13 +62,12 @@ Any corrections needed, please let me know.
 [The Sanctuary](https://gradientdescending.com/the-sanctuary/) is the
 survivoR package’s companion. It holds interactive tables and charts
 detailing the castaways, challenges, vote history, confessionals,
-ratings, and more.
-
-[<img src='dev/images/flame.png' height="240"/>](https://gradientdescending.com/the-sanctuary/)
-
-Confessional counts from [myself](https://twitter.com/danoehm), [Carly
+ratings, and more. Confessional counts from
+[myself](https://twitter.com/danoehm), [Carly
 Levitz](https://twitter.com/carlylevitz),
 [Sam](https://twitter.com/survivorfansam), Grace.
+
+[<img src='dev/images/flame.png' height="240"/>](https://gradientdescending.com/the-sanctuary/)
 
 ### Confessional timing
 
@@ -119,7 +132,7 @@ season_summary
 #>  1 US      US01           Survivor: …      1 Pulau T… Malays… Two tribes…     16
 #>  2 US      US02           Survivor: …      2 Herbert… Austra… Two tribes…     16
 #>  3 US      US03           Survivor: …      3 Shaba N… Kenya   Two tribes…     16
-#>  4 US      US04           Survivor: …      4 Nuku Hi… Polyne… Two tribes…     16
+#>  4 US      US04           Survivor: …      4 Nuku Hi… French… Two tribes…     16
 #>  5 US      US05           Survivor: …      5 Ko Taru… Thaila… Two tribes…     16
 #>  6 US      US06           Survivor: …      6 Rio Neg… Brazil  Two tribes…     16
 #>  7 US      US07           Survivor: …      7 Pearl I… Panama  Two tribes…     16
@@ -130,8 +143,9 @@ season_summary
 #> # ℹ 18 more variables: n_tribes <int>, n_finalists <int>, n_jury <int>,
 #> #   full_name <chr>, winner_id <chr>, winner <chr>, runner_ups <chr>,
 #> #   final_vote <chr>, timeslot <chr>, premiered <date>, ended <date>,
-#> #   filming_started <date>, filming_ended <date>, viewers_premiere <dbl>,
-#> #   viewers_finale <dbl>, viewers_reunion <dbl>, viewers_mean <dbl>, rank <dbl>
+#> #   filming_started <date>, filming_ended <date>, viewers_reunion <dbl>,
+#> #   viewers_premiere <dbl>, viewers_finale <dbl>, viewers_mean <dbl>,
+#> #   rank <dbl>
 ```
 
 </details>
@@ -184,8 +198,8 @@ castaways |>
 #> 18 US      US45           Survivor: 45     45 Dee Valladar… US0666      Dee     
 #> # ℹ 13 more variables: age <dbl>, city <chr>, state <chr>, episode <dbl>,
 #> #   day <dbl>, order <dbl>, result <chr>, jury_status <chr>,
-#> #   original_tribe <chr>, result_number <dbl>, jury <lgl>, finalist <lgl>,
-#> #   winner <lgl>
+#> #   original_tribe <chr>, jury <lgl>, finalist <lgl>, winner <lgl>,
+#> #   result_number <dbl>
 ```
 
 ## Castaway details
@@ -262,7 +276,7 @@ vh <- vote_history |>
     episode == 9
   ) 
 vh
-#> # A tibble: 9 × 22
+#> # A tibble: 9 × 24
 #>   version version_season season_name  season episode   day tribe_status tribe   
 #>   <chr>   <chr>          <chr>         <dbl>   <dbl> <dbl> <chr>        <chr>   
 #> 1 US      US45           Survivor: 45     45       9    17 Merged       Dakuwaqa
@@ -274,10 +288,11 @@ vh
 #> 7 US      US45           Survivor: 45     45       9    17 Merged       Dakuwaqa
 #> 8 US      US45           Survivor: 45     45       9    17 Merged       Dakuwaqa
 #> 9 US      US45           Survivor: 45     45       9    17 Merged       Dakuwaqa
-#> # ℹ 14 more variables: castaway <chr>, immunity <chr>, vote <chr>,
+#> # ℹ 16 more variables: castaway <chr>, immunity <chr>, vote <chr>,
 #> #   vote_event <chr>, vote_event_outcome <chr>, split_vote <chr>,
 #> #   nullified <lgl>, tie <lgl>, voted_out <chr>, order <dbl>, vote_order <dbl>,
-#> #   castaway_id <chr>, vote_id <chr>, voted_out_id <chr>
+#> #   castaway_id <chr>, vote_id <chr>, voted_out_id <chr>, sog_id <dbl>,
+#> #   challenge_id <dbl>
 ```
 
 ``` r
@@ -373,7 +388,7 @@ If any descriptive features need altering please let me know in the
 
 ``` r
 challenge_description
-#> # A tibble: 1,785 × 46
+#> # A tibble: 1,786 × 46
 #>    version version_season season_name      season episode challenge_id
 #>    <fct>   <chr>          <chr>             <dbl>   <dbl>        <dbl>
 #>  1 US      US01           Survivor: Borneo      1       1            1
@@ -386,7 +401,7 @@ challenge_description
 #>  8 US      US01           Survivor: Borneo      1       5            8
 #>  9 US      US01           Survivor: Borneo      1       5            9
 #> 10 US      US01           Survivor: Borneo      1       6           10
-#> # ℹ 1,775 more rows
+#> # ℹ 1,776 more rows
 #> # ℹ 40 more variables: challenge_number <dbl>, challenge_type <chr>,
 #> #   name <chr>, recurring_name <chr>, description <chr>, reward <chr>,
 #> #   additional_stipulation <chr>, balance <lgl>, balance_ball <lgl>,
@@ -399,10 +414,10 @@ challenge_description |>
   glimpse()
 #> Rows: 1
 #> Columns: 33
-#> $ balance                   <int> 336
+#> $ balance                   <int> 337
 #> $ balance_ball              <int> 42
 #> $ balance_beam              <int> 144
-#> $ endurance                 <int> 424
+#> $ endurance                 <int> 425
 #> $ fire                      <int> 66
 #> $ food                      <int> 24
 #> $ knowledge                 <int> 77
@@ -475,7 +490,7 @@ challenge_summary |>
     )
 #> `summarise()` has grouped output by 'category', 'version_season'. You can
 #> override using the `.groups` argument.
-#> # A tibble: 7,486 × 5
+#> # A tibble: 7,485 × 5
 #> # Groups:   category, version_season [502]
 #>    category version_season castaway n_challenges n_won
 #>    <chr>    <chr>          <chr>           <int> <dbl>
@@ -489,7 +504,7 @@ challenge_summary |>
 #>  8 All      US01           Joel               11     6
 #>  9 All      US01           Kelly              25    10
 #> 10 All      US01           Ramona              7     3
-#> # ℹ 7,476 more rows
+#> # ℹ 7,475 more rows
 ```
 
 See the R docs for more details on the fields. Join to
@@ -559,16 +574,16 @@ advantage_details |>
 #> # A tibble: 10 × 9
 #>    version version_season season_name  season advantage_id advantage_type      
 #>    <chr>   <chr>          <chr>         <dbl>        <dbl> <chr>               
-#>  1 US      US45           Survivor: 45     45           NA Amulet              
-#>  2 US      US45           Survivor: 45     45           NA Amulet              
-#>  3 US      US45           Survivor: 45     45           NA Amulet              
-#>  4 US      US45           Survivor: 45     45           NA Challenge Advantage 
-#>  5 US      US45           Survivor: 45     45           NA Goodwill Advantage  
-#>  6 US      US45           Survivor: 45     45           NA Hidden Immunity Idol
-#>  7 US      US45           Survivor: 45     45           NA Hidden Immunity Idol
-#>  8 US      US45           Survivor: 45     45           NA Hidden Immunity Idol
-#>  9 US      US45           Survivor: 45     45           NA Hidden Immunity Idol
-#> 10 US      US45           Survivor: 45     45           NA Safety Without Power
+#>  1 US      US45           Survivor: 45     45            1 Hidden Immunity Idol
+#>  2 US      US45           Survivor: 45     45            2 Hidden Immunity Idol
+#>  3 US      US45           Survivor: 45     45            3 Safety without Power
+#>  4 US      US45           Survivor: 45     45            4 Goodwill Advantage  
+#>  5 US      US45           Survivor: 45     45            5 Amulet              
+#>  6 US      US45           Survivor: 45     45            6 Amulet              
+#>  7 US      US45           Survivor: 45     45            7 Amulet              
+#>  8 US      US45           Survivor: 45     45            8 Hidden Immunity Idol
+#>  9 US      US45           Survivor: 45     45            9 Hidden Immunity Idol
+#> 10 US      US45           Survivor: 45     45           10 Challenge Advantage 
 #> # ℹ 3 more variables: clue_details <chr>, location_found <chr>,
 #> #   conditions <chr>
 ```
@@ -701,8 +716,8 @@ confessionals |>
 
 This dataset contains the estimated screen time for each castaway during
 an episode. Please note that this is still in the early days of
-development. There is likely to be misclassifcation and other sources of
-error. The model will be refined over time.
+development. There is likely to be misclassification and other sources
+of error. The model will be refined over time.
 
 An individuals’ screen time is calculated, at a high-level, via the
 following process:
@@ -779,17 +794,17 @@ still_alive <- function(.version, .season, .n_boots) {
 }
 
 still_alive("US", 45, 6)
-#> # A tibble: 6 × 12
-#>   version version_season season_name  season episode order final_n castaway_id
-#>   <chr>   <chr>          <chr>         <dbl>   <dbl> <dbl>   <dbl> <chr>      
-#> 1 US      US45           Survivor: 45     45      12    12       6 US0671     
-#> 2 US      US45           Survivor: 45     45      12    12       6 US0674     
-#> 3 US      US45           Survivor: 45     45      12    12       6 US0666     
-#> 4 US      US45           Survivor: 45     45      12    12       6 US0672     
-#> 5 US      US45           Survivor: 45     45      12    12       6 US0663     
-#> 6 US      US45           Survivor: 45     45      12    12       6 US0667     
-#> # ℹ 4 more variables: castaway <chr>, tribe <chr>, tribe_status <chr>,
-#> #   game_status <chr>
+#> # A tibble: 6 × 14
+#>   version version_season season_name season episode order n_boots final_n sog_id
+#>   <chr>   <chr>          <chr>        <dbl>   <dbl> <dbl>   <dbl>   <dbl>  <dbl>
+#> 1 US      US45           Survivor: …     45      12    12      12       6     13
+#> 2 US      US45           Survivor: …     45      12    12      12       6     13
+#> 3 US      US45           Survivor: …     45      12    12      12       6     13
+#> 4 US      US45           Survivor: …     45      12    12      12       6     13
+#> 5 US      US45           Survivor: …     45      12    12      12       6     13
+#> 6 US      US45           Survivor: …     45      12    12      12       6     13
+#> # ℹ 5 more variables: castaway_id <chr>, castaway <chr>, tribe <chr>,
+#> #   tribe_status <chr>, game_status <chr>
 ```
 
 </details>
