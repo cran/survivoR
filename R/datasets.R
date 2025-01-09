@@ -58,12 +58,19 @@
 #'   \item{\code{day}}{Number of days the castaway survived. A missing value indicates they later returned to the game that season}
 #'   \item{\code{order}}{Boot order. Order in which castaway was voted out e.g. 5 is the 5th person voted of the island}
 #'   \item{\code{result}}{Final result}
-#'   \item{\code{result_number}}{Result number i.e. the final place. NA for castaways that were voted out but later returned e.g. Redemption Island}
+#'   \item{\code{place}}{Place as a number e.g. Sole Survivor is 1, runner-up 2, etc}
 #'   \item{\code{jury_status}}{Jury status}
 #'   \item{\code{original_tribe}}{Original tribe name}
 #'   \item{\code{finalist}}{Logical. \code{TRUE} if the castaway was a finalists}
 #'   \item{\code{jury}}{Logical. \code{TRUE} if the castaway was a jury member}
 #'   \item{\code{winner}}{Logical. \code{TRUE} if the castaway was the winner}
+#'   \item{\code{acknowledge}}{Did the contestant acknowledge their teammates in one of these specific ways after snuffing — or just walk away?}
+#'   \item{\code{ack_gesture}}{for any physical gestures towards the tribe after torch snuffing. Types: wave, nod, wink, bow or prayer sign with hands}
+#'   \item{\code{ack_look}}{For making eye contact with one or more members of the tribe after torch snuffing}
+#'   \item{\code{ack_smile}}{For smiling at the tribe after torch snuffing}
+#'   \item{\code{ack_speak}}{For any verbal communication directed at the tribe after torch snuffing}
+#'   \item{\code{ack_quote}}{What, if anything, the contestant said. Direct quotes only.}
+#'   \item{\code{ack_score}}{The score is derived from the four subcategories of acknowledgment: words, look, gesture, and smile. Each true value in these categories adds 1 to the score.}
 #' }
 #'
 #' @details Note that in the seasons where castaways returned to the game e.g. Redemption Island, a castaway may
@@ -71,7 +78,11 @@
 #'
 #' @import tidyr
 #'
-#' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}  \url{https://survivor.fandom.com/wiki/Main_Page}
+#' @source
+#' \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)};
+#' \url{https://survivor.fandom.com/wiki/Main_Page};
+#' \code{ack_} features from Matt Stiles \url{https://github.com/stiles/survivor-voteoffs}
+#'
 #' @examples
 #' library(dplyr)
 #' castaways %>%
@@ -100,6 +111,7 @@
 #'   \item{\code{lgbt}}{LGBTQIA+ status as listed on the survivor wiki.}
 #'   \item{\code{personality_type}}{The Myer-Briggs personality type of the castaway}
 #'   \item{\code{occupation}}{Occupation}
+#'   \item{\code{collar}}{White Collar, Blue Collar, No Collar, or Unknown. WARNING: this is experimental. The classification has been made using a model and results may be inconsistent.}
 #'   \item{\code{three_words}}{Answer to the question "three words to describe you?"}
 #'   \item{\code{hobbies}}{Answer to the question "what are you favourite hobbies?"}
 #'   \item{\code{pet_peeves}}{Answer to the question "what are your pet peeves?"}
@@ -721,7 +733,10 @@
 #'   \item{\code{category}}{The category of the challenge e.g. tribal, individual, individual immunity, duel, etc. This makes it easy
 #'   to split out the difference types of challenges and avoid complications such as 'Team / Individual' challenges where there is a
 #'   dependent outcome structure. Join to \code{challenge_results} using \code{challenge_id}, \code{version_season} and \code{castaway_id}}
+#'   \item{\code{version}}{Country code for the version of the show}
 #'   \item{\code{version_season}}{Version season key}
+#'   \item{\code{season}}{The season number}
+#'   \item{\code{episode}}{Episode number}
 #'   \item{\code{challenge_id}}{Primary key to the \code{challenge_description} data set which contains features of the challenge}
 #'   \item{\code{challenge_type}}{The challenge type e.g. immunity, reward, etc}
 #'   \item{\code{outcome_type}}{Whether the challenge is individual or tribal. Some individual reward challenges may involve multiple castaways as the winner gets to choose who they bring along}
@@ -732,8 +747,7 @@
 #'   \item{\code{n_entities}}{Number of entities competing for the win e.g. the number of tribes, teams, or people.}
 #'   \item{\code{n_winners}}{Number of winners (or winning entities) e.g. if there are two tribes there is only one winning tribe, if there
 #'   are three tribes like the new era there are two winning tribes and one that goes to tribal council.}
-#'   \item{\code{n_in_team}}{The number of people in the tribe or team}
-#'   \item{\code{won}}{If the castaway won}
+#'   \item{\code{won}}{number of challenges won}
 #' }
 #'
 #' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)} \url{https://survivor.fandom.com/wiki/Main_Page}
@@ -744,17 +758,51 @@
 #'   filter(version_season == 46)
 "challenge_summary"
 
-#' Episode summary
+#' Castaway scores
 #'
-#' A dataset containing a summary of all US episodes seasons of Survivor
+#' The challenge, vote history, and advantage scores are a measure of success or
+#' proficiency. Higher the better. See details.
 #'
 #' @format This data frame contains the following columns:
 #' \describe{
 #'   \item{\code{version}}{Country code for the version of the show}
 #'   \item{\code{version_season}}{Version season key}
-#'   \item{\code{episode}}{Episode number}
-#'   \item{\code{episode_summary}}{summary of the episode}
+#'   \item{\code{season}}{The season number}
+#'   \item{\code{castaway_id}}{Castaway ID}
+#'   \item{\code{castaway}}{Castaway}
+#'   \item{\code{score_chal_all}}{Challenge score for all challenges}
+#'   \item{\code{score_chal_immunity}}{Challenge score for immunity challenges}
+#'   \item{\code{score_chal_reward}}{Challenge score for reward challenges}
+#'   \item{\code{score_chal_tribal}}{Challenge score for tribals challenges}
+#'   \item{\code{score_chal_tribal_immunity}}{Challenge score for tribal immunity}
+#'   \item{\code{score_chal_tribal_reward}}{Challenge score for tribal reward}
+#'   \item{\code{score_chal_individual}}{Challenge score for individual challenges}
+#'   \item{\code{score_chal_individual_immunity}}{Challenge score for individual immunity}
+#'   \item{\code{score_chal_individual_reward}}{Challenge score for individual reward}
+#'   \item{\code{score_chal_team}}{Challenge score for team challenges}
+#'   \item{\code{score_chal_team_reward}}{Challenge score for team reward}
+#'   \item{\code{score_chal_team_immunity}}{Challenge score for team immunity}
+#'   \item{\code{score_chal_duel}}{Challenge score for duels}
+#'   \item{\code{n_votes_received}}{Number of votes received}
+#'   \item{\code{n_successful_boots}}{Number of successful boots}
+#'   \item{\code{p_successful_boot}}{Percentage of successful boots. Tribals where the castaway did not have a vote are removed from the calculation}
+#'   \item{\code{n_tribals}}{Number of tribals attended}
+#'   \item{\code{n_tribals_with_vote}}{Number of tribals attended where the player had a vote}
+#'   \item{\code{score_vote}}{Vote history score}
+#'   \item{\code{score_adv}}{Advantage scores}
+#'   \item{\code{n_adv_found}}{Number of advantages found}
+#'   \item{\code{n_idols_found}}{number of idols found}
+#'   \item{\code{n_voted_out_with_adv}}{Number of advantages they were voted out with}
+#'   \item{\code{n_voted_out_with_idol}}{Number of idols they were voted out with}
+#'   \item{\code{n_adv_played}}{Number of advantages played}
+#'   \item{\code{n_adv_not_played}}{Number of advantages not played}
 #' }
 #'
-#' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}
-"episode_summary"
+#' @details
+#' Challenge score: \url{https://gradientdescending.com/the-sanctuary/full-challenges-list-all.html#details}
+#'
+#' Vote history score: \url{https://gradientdescending.com/the-sanctuary/full-vote-list.html#details}. The vote history score is somewhat experimental.
+#'
+#' Advantage score: TBC
+#'
+"castaway_scores"

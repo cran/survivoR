@@ -3,7 +3,10 @@ utils::globalVariables(c("action", "castaway", "castaway_id", "confessional_coun
                          "duration", "episode", "start", "time", "time_between", "version_season",
                          "season_summary", "n_start", "n_stop", "global_id", "id0", "confApp",
                          "original_tribe", "season", "tribe_colour", "tribe_status", "value",
-                         "num", "tribe", "change_castaway"))
+                         "num", "tribe", "change_castaway", "bipoc", "add_lgbt", "add_age_groups",
+                         "gender", "bipoc", "latin_american", "african", "asian", "finalist",
+                         "full_name_detailed", "jury", "result", "place", "winner", "alive", "final_n",
+                         "finalist", "game_status", "lgbt"))
 
 #' Castaway images
 #'
@@ -184,5 +187,100 @@ get_confessional_timing <- function(x, .vs, .episode, .mda = 3) {
       confessional_count = replace_na(confessional_count, 0)
     ) %>%
     arrange(castaway)
+
+}
+
+
+#' Read episode transcripts
+#'
+#' Read the episode transcripts from Github. File is large and not explicitly part
+#' of the package. Data is update by Matt Stiles.
+#'
+#' @return A data frame of episode transcripts
+#' @export
+#'
+#' @importFrom readr read_csv
+#'
+#' @examples
+#' # Run
+#' # load_episode_transcripts()
+#' # to load all transcripts
+load_episode_transcripts <- function() {
+  read_csv(
+    "https://raw.githubusercontent.com/doehm/survivoR/refs/heads/master/dev/data/transcripts.csv",
+    col_types = cols()
+    )
+}
+
+
+#' Still alive
+#'
+#' Finds the set of players that are still alive at either the start or end of
+#' an episode, or given a set number of boots.
+#'
+#' @param .vs Version season
+#' @param .n_boots Number of boots
+#' @param .ep Episode to evaluate who is alive.
+#' @param .at Either 'start' or 'end'. If 'start' the flag will indicate who is
+#' alive at the start of the episode. If 'end' it will indicate who is alive at
+#' the end of the episode i.e. after tribal council.
+#'
+#' @return Data frame
+#' @export
+#'
+#' @examples
+#'
+#' library(survivoR)
+#' library(dplyr)
+#'
+#' # at the end of the episode
+#' still_alive("US47", 12)
+#'
+#' # at the start of the episode
+#' still_alive("US47", 12, .at = "start")
+#'
+still_alive <- function(.vs, .ep = NULL, .n_boots = NULL, .at = "end") {
+
+  if(!is.null(.n_boots)) {
+    out <- survivoR::boot_mapping |>
+      filter(
+        version_season %in% .vs,
+        order == .n_boots,
+        game_status %in% c("In the game", "Returned")
+      ) |>
+      group_by(castaway_id) |>
+      slice_max(episode) |>
+      ungroup()
+  }
+
+  if(!is.null(.ep)) {
+
+    if(.at == "end") {
+      .ep_x <- .ep
+    } else {
+      .ep_x <- .ep-1
+    }
+
+    df_cast <- survivoR::castaways |>
+      filter_vs(.vs) |>
+      filter(episode <= .ep_x) |>
+      distinct(castaway_id)
+
+    out <- survivoR::boot_mapping |>
+      filter(
+        version_season %in% .vs,
+        episode == .ep,
+        game_status %in% c("In the game", "Returned")
+      ) |>
+      group_by(castaway_id) |>
+      slice_max(order) |>
+      anti_join(
+        df_cast,
+        join_by(castaway_id)
+      ) |>
+      ungroup()
+  }
+
+  out
 
 }

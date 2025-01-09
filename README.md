@@ -3,16 +3,20 @@
 
 # survivoR <img src='dev/images/hex-flame-final.png' align="right" height="240" />
 
-69 seasons. 1301 people. 1 package!
+70 seasons. 1319 people. 1 package!
 
-survivoR is a collection of data sets detailing events across 69 seasons
+survivoR is a collection of data sets detailing events across 70 seasons
 of Survivor US, Australia, South Africa, New Zealand and UK. It includes
 castaway information, vote history, immunity and reward challenge
 winners, jury votes, advantage details and a lot more.
 
+For analysis and updates you can follow me on Bluesky
+[@danoehm.bsky.social](https://bsky.app/profile/danoehm.bsky.social) or
+Threads [@\_survivordb](https://www.threads.net/@_survivordb)
+
 # Installation
 
-Now on CRAN (v2.3.2) or Git (v2.3.4).
+Install from CRAN (**v2.3.4**) or Git (**v2.3.5**).
 
 If Git \> CRAN I’d suggest install from Git. We are constantly improving
 the data sets so the github version is likely to be slightly improved.
@@ -25,37 +29,52 @@ install.packages("survivoR")
 devtools::install_github("doehm/survivoR")
 ```
 
-# News: survivoR 2.3.4
+# News: survivoR 2.3.5
 
 <img src='https://img.shields.io/badge/col-new-green'/>
 
-- Adding a new key `sog_id` (stage of game ID) to `boot_mapping`,
-  `challenge_results`, and `vote_history`. This makes it easier to join
-  those tables and reference a particular stage of the game. The stage
-  of the game is determined by a change in players/tribe setup
-  e.g. whenever someone is voted out, medically evacuated, switches
-  tribes, or simply starting a new episode the `sog_id` increase by 1.
-  This is now available but still being developed and running a bunch of
-  tests, so please let me know if there are inconsistencies.
-- `n_boots` is now on `boot_mapping`.
-
-# News: survivoR 2.3.3
-
-<!-- <img src='https://img.shields.io/badge/col-deprecated-red'/>  -->
-
-<img src='https://img.shields.io/badge/col-new-green'/>
-
-- Adding complete seasons
-  - US46
-- New data set added
-  - episode_summary - the summary of the episode from Wikipedia
-  - challenge_summary - a summarised version of challenge_results for
-    easy analysis
-- New fields added
-  - team on challenge_results - identifying the team which the castaways
-    were on during the challenge
-
-Any corrections needed, please let me know.
+- Adding complete US47 data
+- Adding new `castaway_scores` dataset
+- Adding new `add_*` functions:
+  - `add_alive()`: Adds a logical flag if the castaway is alive at the
+    start or end of an episode
+  - `add_bipoc()`: Adds a BIPOC to the data frame. If any African
+    American (or Canadian), Asian American, Latin American, or Native
+    American is `TRUE` then BIPOC is `TRUE`.
+  - `add_castaway()`: Adds castaway to a data frame. Input data frame
+    must have `castaway_id`.
+  - `add_demogs()`: Add demographics that includes age, gender,
+    race/ethnicity, and LGBTQIA+ status to a data frame with
+    castaway_id.
+  - `add_finalist()`: Adds a winner flag to the data set.
+  - `add_full_name()`: Adds full name to the data frame. Useful for
+    plotting and making tables.
+  - `add_gender()`: Adds gender to a data frame
+  - `add_jury()`: Adds a jury member flag to the data set.
+  - `add_lgbt()`: Adds the LGBTQIA+ flag to the data frame.
+  - `add_result()`: Adds the result and place to the data frame.
+  - `add_tribe()`: Adds tribe to a data frame for a specified stage of
+    the game e.g. `original`, `swapped`, `swapped_2`, etc.
+  - `add_tribe_colour()`: Add tribe colour to the data frame. Useful for
+    preparing the data for plotting with ggplot2.
+  - `add_winner()`: Adds a winner flag to the data set.
+- Adding new `filter_*` functions:
+  - `filter_alive()`: Filters a given dataset to those that are still
+    alive in the game at the start or end of a user specified episode.
+  - `filter_final_n()`: Filters to the final `n` players e.g. the final
+    5.
+  - `filter_finalist()`: Filters a data set to the finalists of a given
+    season.
+  - `filter_jury()`: Filters a data set to the jury members of a given
+    season.
+  - `filter_new_era()`: Filters a data set to all New Era seasons.
+  - `filter_us()`: Filter a data set to a specified set of US season or
+    list of seasons. A shorthand version of `filter_vs()` for the US
+    seasons.
+  - `filter_vs()`: Filters a data set to a specified version season or
+    list of version seasons.
+  - `filter_winner()`: Filters a data set to the winners of a given
+    season.
 
 # [The Sanctuary](https://gradientdescending.com/the-sanctuary/)
 
@@ -96,21 +115,22 @@ There are 19 data sets included in the package:
 2.  `advantage_details`
 3.  `boot_mapping`
 4.  `castaway_details`
-5.  `castaways`
-6.  `challenge_results`
-7.  `challenge_description`
-8.  `challenge_summary`
-9.  `confessionals`
-10. `jury_votes`
-11. `season_summary`
-12. `survivor_auction`
-13. `tribe_colours`
-14. `tribe_mapping`
-15. `episodes`
-16. `vote_history`
-17. `auction_details`
-18. `screen_time`
-19. `season_palettes`
+5.  `castaway_scores`
+6.  `castaways`
+7.  `challenge_results`
+8.  `challenge_description`
+9.  `challenge_summary`
+10. `confessionals`
+11. `jury_votes`
+12. `season_summary`
+13. `survivor_auction`
+14. `tribe_colours`
+15. `tribe_mapping`
+16. `episodes`
+17. `vote_history`
+18. `auction_details`
+19. `screen_time`
+20. `season_palettes`
 
 See the sections below for more details on the key data sets.
 
@@ -126,20 +146,20 @@ the winner, runner ups and location.
 
 ``` r
 season_summary
-#> # A tibble: 69 × 26
+#> # A tibble: 70 × 26
 #>    version version_season season_name season location country tribe_setup n_cast
 #>    <chr>   <chr>          <chr>        <dbl> <chr>    <chr>   <chr>        <int>
 #>  1 US      US01           Survivor: …      1 Pulau T… Malays… Two tribes…     16
 #>  2 US      US02           Survivor: …      2 Herbert… Austra… Two tribes…     16
 #>  3 US      US03           Survivor: …      3 Shaba N… Kenya   Two tribes…     16
-#>  4 US      US04           Survivor: …      4 Nuku Hi… French… Two tribes…     16
+#>  4 US      US04           Survivor: …      4 Nuku Hi… France  Two tribes…     16
 #>  5 US      US05           Survivor: …      5 Ko Taru… Thaila… Two tribes…     16
 #>  6 US      US06           Survivor: …      6 Rio Neg… Brazil  Two tribes…     16
 #>  7 US      US07           Survivor: …      7 Pearl I… Panama  Two tribes…     16
 #>  8 US      US08           Survivor: …      8 Pearl I… Panama  Three trib…     18
 #>  9 US      US09           Survivor: …      9 Efate, … Vanuatu Two tribes…     18
 #> 10 US      US10           Survivor: …     10 Koror, … Palau   A schoolya…     20
-#> # ℹ 59 more rows
+#> # ℹ 60 more rows
 #> # ℹ 18 more variables: n_tribes <int>, n_finalists <int>, n_jury <int>,
 #> #   full_name <chr>, winner_id <chr>, winner <chr>, runner_ups <chr>,
 #> #   final_vote <chr>, timeslot <chr>, premiered <date>, ended <date>,
@@ -175,7 +195,7 @@ found on the `vote_history`, `jury_votes` and `challenges` data sets.
 ``` r
 castaways |> 
   filter(season == 45)
-#> # A tibble: 18 × 20
+#> # A tibble: 18 × 27
 #>    version version_season season_name  season full_name     castaway_id castaway
 #>    <chr>   <chr>          <chr>         <dbl> <chr>         <chr>       <chr>   
 #>  1 US      US45           Survivor: 45     45 Hannah Rose   US0669      Hannah  
@@ -196,10 +216,11 @@ castaways |>
 #> 16 US      US45           Survivor: 45     45 Jake O'Kane   US0671      Jake    
 #> 17 US      US45           Survivor: 45     45 Austin Li Co… US0663      Austin  
 #> 18 US      US45           Survivor: 45     45 Dee Valladar… US0666      Dee     
-#> # ℹ 13 more variables: age <dbl>, city <chr>, state <chr>, episode <dbl>,
-#> #   day <dbl>, order <dbl>, result <chr>, jury_status <chr>,
+#> # ℹ 20 more variables: age <dbl>, city <chr>, state <chr>, episode <dbl>,
+#> #   day <dbl>, order <dbl>, result <chr>, place <dbl>, jury_status <chr>,
 #> #   original_tribe <chr>, jury <lgl>, finalist <lgl>, winner <lgl>,
-#> #   result_number <dbl>
+#> #   acknowledge <lgl>, ack_look <lgl>, ack_speak <lgl>, ack_gesture <lgl>,
+#> #   ack_smile <lgl>, ack_quote <chr>, ack_score <dbl>
 ```
 
 ## Castaway details
@@ -230,7 +251,7 @@ to make using the race/ethnicity fields simpler.
 
 ``` r
 castaway_details
-#> # A tibble: 1,100 × 20
+#> # A tibble: 1,118 × 21
 #>    castaway_id full_name full_name_detailed castaway date_of_birth date_of_death
 #>    <chr>       <chr>     <chr>              <chr>    <date>        <date>       
 #>  1 US0001      Sonja Ch… Sonja Christopher  Sonja    1937-01-28    2024-04-26   
@@ -243,11 +264,47 @@ castaway_details
 #>  8 US0008      Greg Buis Greg Buis          Greg     1975-12-31    NA           
 #>  9 US0009      Jenna Le… Jenna Lewis        Jenna L. 1977-07-16    NA           
 #> 10 US0010      Gervase … Gervase Peterson   Gervase  1969-11-02    NA           
-#> # ℹ 1,090 more rows
-#> # ℹ 14 more variables: gender <chr>, african <lgl>, asian <lgl>,
+#> # ℹ 1,108 more rows
+#> # ℹ 15 more variables: gender <chr>, african <lgl>, asian <lgl>,
 #> #   latin_american <lgl>, native_american <lgl>, bipoc <lgl>, lgbt <lgl>,
-#> #   personality_type <chr>, occupation <chr>, three_words <chr>, hobbies <chr>,
-#> #   pet_peeves <chr>, race <chr>, ethnicity <chr>
+#> #   personality_type <chr>, occupation <chr>, collar <chr>, three_words <chr>,
+#> #   hobbies <chr>, pet_peeves <chr>, race <chr>, ethnicity <chr>
+```
+
+## Castaway scores
+
+I have created a measure for challenge success, vote history or tribal
+council success and advantage success. For more details please see
+follow the links:
+
+[Challenge score
+methodology](https://gradientdescending.com/the-sanctuary/full-challenges-list-all.html#details)
+
+[Vote history
+mothodology](https://gradientdescending.com/the-sanctuary/full-vote-list.html#details)
+
+``` r
+castaway_scores
+#> # A tibble: 857 × 31
+#>    version version_season season castaway_id castaway score_chal_all
+#>    <chr>   <chr>           <dbl> <chr>       <chr>             <dbl>
+#>  1 US      US01                1 US0001      Sonja             -0.5 
+#>  2 US      US01                1 US0002      B.B.               0.5 
+#>  3 US      US01                1 US0003      Stacey            -0.5 
+#>  4 US      US01                1 US0004      Ramona            -0.5 
+#>  5 US      US01                1 US0005      Dirk              -0.5 
+#>  6 US      US01                1 US0006      Joel               0.5 
+#>  7 US      US01                1 US0007      Gretchen           0.4 
+#>  8 US      US01                1 US0008      Greg               2.18
+#>  9 US      US01                1 US0009      Jenna             -0.07
+#> 10 US      US01                1 US0010      Gervase            1.64
+#> # ℹ 847 more rows
+#> # ℹ 25 more variables: score_chal_immunity <dbl>, score_chal_reward <dbl>,
+#> #   score_chal_tribal <dbl>, score_chal_tribal_immunity <dbl>,
+#> #   score_chal_tribal_reward <dbl>, score_chal_individual <dbl>,
+#> #   score_chal_individual_immunity <dbl>, score_chal_individual_reward <dbl>,
+#> #   score_chal_team <dbl>, score_chal_team_reward <dbl>,
+#> #   score_chal_team_immunity <dbl>, score_chal_duel <dbl>, …
 ```
 
 </details>
@@ -388,7 +445,7 @@ If any descriptive features need altering please let me know in the
 
 ``` r
 challenge_description
-#> # A tibble: 1,786 × 46
+#> # A tibble: 1,806 × 46
 #>    version version_season season_name      season episode challenge_id
 #>    <fct>   <chr>          <chr>             <dbl>   <dbl>        <dbl>
 #>  1 US      US01           Survivor: Borneo      1       1            1
@@ -401,7 +458,7 @@ challenge_description
 #>  8 US      US01           Survivor: Borneo      1       5            8
 #>  9 US      US01           Survivor: Borneo      1       5            9
 #> 10 US      US01           Survivor: Borneo      1       6           10
-#> # ℹ 1,776 more rows
+#> # ℹ 1,796 more rows
 #> # ℹ 40 more variables: challenge_number <dbl>, challenge_type <chr>,
 #> #   name <chr>, recurring_name <chr>, description <chr>, reward <chr>,
 #> #   additional_stipulation <chr>, balance <lgl>, balance_ball <lgl>,
@@ -414,39 +471,39 @@ challenge_description |>
   glimpse()
 #> Rows: 1
 #> Columns: 33
-#> $ balance                   <int> 337
-#> $ balance_ball              <int> 42
-#> $ balance_beam              <int> 144
-#> $ endurance                 <int> 425
-#> $ fire                      <int> 66
+#> $ balance                   <int> 344
+#> $ balance_ball              <int> 44
+#> $ balance_beam              <int> 149
+#> $ endurance                 <int> 430
+#> $ fire                      <int> 67
 #> $ food                      <int> 24
 #> $ knowledge                 <int> 77
 #> $ memory                    <int> 28
 #> $ mud                       <int> 46
 #> $ obstacle_blindfolded      <int> 51
-#> $ obstacle_cargo_net        <int> 144
+#> $ obstacle_cargo_net        <int> 146
 #> $ obstacle_chopping         <int> 32
 #> $ obstacle_combination_lock <int> 22
-#> $ obstacle_digging          <int> 91
+#> $ obstacle_digging          <int> 93
 #> $ obstacle_knots            <int> 40
-#> $ obstacle_padlocks         <int> 73
-#> $ precision                 <int> 286
+#> $ obstacle_padlocks         <int> 74
+#> $ precision                 <int> 288
 #> $ precision_catch           <int> 63
 #> $ precision_roll_ball       <int> 13
 #> $ precision_slingshot       <int> 53
-#> $ precision_throw_balls     <int> 72
-#> $ precision_throw_coconuts  <int> 22
+#> $ precision_throw_balls     <int> 76
+#> $ precision_throw_coconuts  <int> 23
 #> $ precision_throw_rings     <int> 19
-#> $ precision_throw_sandbags  <int> 54
-#> $ puzzle                    <int> 395
+#> $ precision_throw_sandbags  <int> 55
+#> $ puzzle                    <int> 401
 #> $ puzzle_slide              <int> 16
 #> $ puzzle_word               <int> 29
-#> $ race                      <int> 1281
+#> $ race                      <int> 1297
 #> $ strength                  <int> 126
-#> $ turn_based                <int> 227
-#> $ water                     <int> 347
-#> $ water_paddling            <int> 147
-#> $ water_swim                <int> 252
+#> $ turn_based                <int> 229
+#> $ water                     <int> 351
+#> $ water_paddling            <int> 148
+#> $ water_swim                <int> 256
 ```
 
 See the help manual for more detailed descriptions of the features.
@@ -490,8 +547,8 @@ challenge_summary |>
     )
 #> `summarise()` has grouped output by 'category', 'version_season'. You can
 #> override using the `.groups` argument.
-#> # A tibble: 7,485 × 5
-#> # Groups:   category, version_season [502]
+#> # A tibble: 7,669 × 5
+#> # Groups:   category, version_season [514]
 #>    category version_season castaway n_challenges n_won
 #>    <chr>    <chr>          <chr>           <int> <dbl>
 #>  1 All      US01           B.B.                3     2
@@ -504,7 +561,46 @@ challenge_summary |>
 #>  8 All      US01           Joel               11     6
 #>  9 All      US01           Kelly              25    10
 #> 10 All      US01           Ramona              7     3
-#> # ℹ 7,475 more rows
+#> # ℹ 7,659 more rows
+```
+
+How to add the challenge scores to challenge summary.
+
+``` r
+
+challenge_summary |>
+  group_by(category, version_season, castaway_id, castaway) |>
+  summarise(
+    n_challenges = n_distinct(challenge_id),
+    n_won = sum(won),
+    .groups = "drop"
+  ) |>
+  left_join(
+    castaway_scores |>
+      select(version_season, castaway_id, starts_with("score_chal")) |>
+      pivot_longer(c(-version_season, -castaway_id), names_to = "category", values_to = "score") |>
+      mutate(
+        category = str_remove(category, "score_chal_"),
+        category = str_replace_all(category, "_", " "),
+        category = str_to_title(category)
+      ) |>
+      select(category, version_season, castaway_id, score),
+    join_by(category, version_season, castaway_id)
+  )
+#> # A tibble: 7,669 × 7
+#>    category version_season castaway_id castaway n_challenges n_won score
+#>    <chr>    <chr>          <chr>       <chr>           <int> <dbl> <dbl>
+#>  1 All      US01           US0001      Sonja               1     0 -0.5 
+#>  2 All      US01           US0002      B.B.                3     2  0.5 
+#>  3 All      US01           US0003      Stacey              5     2 -0.5 
+#>  4 All      US01           US0004      Ramona              7     3 -0.5 
+#>  5 All      US01           US0005      Dirk                9     4 -0.5 
+#>  6 All      US01           US0006      Joel               11     6  0.5 
+#>  7 All      US01           US0007      Gretchen           12     6  0.4 
+#>  8 All      US01           US0008      Greg               14     8  2.18
+#>  9 All      US01           US0009      Jenna              16     6 -0.07
+#> 10 All      US01           US0010      Gervase            18     8  1.64
+#> # ℹ 7,659 more rows
 ```
 
 See the R docs for more details on the fields. Join to
@@ -859,7 +955,7 @@ and at what price.
 ``` r
 auction_details |> 
   filter(season == 45)
-#> # A tibble: 22 × 19
+#> # A tibble: 11 × 19
 #>    version version_season season_name  season  item item_description    category
 #>    <chr>   <chr>          <chr>         <dbl> <dbl> <chr>               <chr>   
 #>  1 US      US45           Survivor: 45     45     1 Salty Pretzels And… Food an…
@@ -872,7 +968,7 @@ auction_details |>
 #>  8 US      US45           Survivor: 45     45     7 Slice Of Pepperoni… Food an…
 #>  9 US      US45           Survivor: 45     45     8 Toothbrush And Too… Comfort 
 #> 10 US      US45           Survivor: 45     45     9 Chocolate Cake      Food an…
-#> # ℹ 12 more rows
+#> 11 US      US45           Survivor: 45     45    10 Pbandj Sandwich, C… Food an…
 #> # ℹ 12 more variables: castaway <chr>, castaway_id <chr>, cost <dbl>,
 #> #   covered <lgl>, money_remaining <dbl>, auction_num <dbl>,
 #> #   participated <chr>, notes <chr>, alternative_offered <lgl>,
@@ -927,12 +1023,17 @@ A big thank you to:
   confessional counts
 - [**Dario Mavec**](https://github.com/dariomavec) for developing the
   face detection model for estimating total screen time
+- [**Matt
+  Stiles**](https://github.com/stiles/survivor-voteoffs?tab=readme-ov-file)
+  for collecting and contributing the acknowledgment features on the
+  `castaways` data frame.
 - **Camilla Bendetti** for collating the personality type data for each
   castaway.
 - **Uygar Sozer** for adding the filming start and end dates for each
   season.
 - **Holt Skinner** for creating the castaway ID to map people across
   seasons and manage name changes.
+- **Kosta Psaltis** for the original race data.
 
 # References
 
