@@ -6,8 +6,8 @@
 #' \describe{
 #'   \item{\code{version}}{Country code for the version of the show}
 #'   \item{\code{version_season}}{Version season key}
-#'   \item{\code{season_name}}{Season name}
 #'   \item{\code{season}}{Season number}
+#'   \item{\code{season_name}}{Season name}
 #'   \item{\code{n_cast}}{Number of cast in the season}
 #'   \item{\code{n_tribes}}{Number of starting tribes}
 #'   \item{\code{n_finalists}}{Number of finalists}
@@ -46,7 +46,6 @@
 #'   \item{\code{version}}{Country code for the version of the show}
 #'   \item{\code{version_season}}{Version season key}
 #'   \item{\code{season}}{Season number}
-#'   \item{\code{season_name}}{Season name}
 #'   \item{\code{full_name}}{Full name of the castaway}
 #'   \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano. The first two letters reference the country of the version played e.g. US, AU (TBA).}
 #'   \item{\code{castaway}}{Name of castaway. Generally this is the name they were most commonly referred to
@@ -73,9 +72,6 @@
 #'   \item{\code{ack_score}}{The score is derived from the four subcategories of acknowledgment: words, look, gesture, and smile. Each true value in these categories adds 1 to the score.}
 #' }
 #'
-#' @details Note that in the seasons where castaways returned to the game e.g. Redemption Island, a castaway may
-#' appear twice.
-#'
 #' @import tidyr
 #'
 #' @source
@@ -89,6 +85,39 @@
 #'   filter(season == 40)
 "castaways"
 
+#' Boot order
+#'
+#' Similar to the castaways dataset, `boot_order` records the order in which castaways
+#' left the game. If a player was voted out of the game, returned to the game like seasons
+#' such as Redemption Island, and then voted out again, they will have two rows in the table.
+#'
+#' @format This data frame contains the following columns:
+#' \describe{
+#'   \item{\code{version}}{Country code for the version of the show}
+#'   \item{\code{version_season}}{Version season key}
+#'   \item{\code{season}}{Season number}
+#'   \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano. The first two letters reference the country of the version played e.g. US, AU (TBA).}
+#'   \item{\code{castaway}}{Name of castaway. Generally this is the name they were most commonly referred to
+#'   or nickname e.g. no one called Coach, Benjamin. He was simply Coach}
+#'   \item{\code{episode}}{Episode number}
+#'   \item{\code{day}}{Number of days the castaway survived. A missing value indicates they later returned to the game that season}
+#'   \item{\code{order}}{Boot order. Order in which castaway was voted out e.g. 5 is the 5th person voted of the island}
+#'   \item{\code{result}}{Final result}
+#' }
+#'
+#' @import tidyr
+#'
+#' @source
+#' \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)};
+#' \url{https://survivor.fandom.com/wiki/Main_Page};
+#' \code{ack_} features from Matt Stiles \url{https://github.com/stiles/survivor-voteoffs}
+#'
+#' @examples
+#' library(dplyr)
+#' castaways %>%
+#'   filter(season == 40)
+"boot_order"
+
 #' Castaway details
 #'
 #' A dataset containing details on the castaways for each season
@@ -100,6 +129,7 @@
 #'   \item{\code{full_name_detailed}}{A detailed version of full_name for plotting e.g. 'Boston' Rob Mariano}
 #'   \item{\code{castaway}}{Short name of the castaway. Name typically used during the season. Sometimes there are multiple
 #'   people with the same name e.g. Rob C and Rob M in Survivor All-Stars. This field takes the most verbose name used}
+#'   \item{\code{last_name}}{Last name}
 #'   \item{\code{date_of_birth}}{Date of birth}
 #'   \item{\code{date_of_death}}{Date of death}
 #'   \item{\code{gender}}{Gender of castaway}
@@ -144,7 +174,6 @@
 #' \describe{
 #'   \item{\code{version}}{Country code for the version of the show}
 #'   \item{\code{version_season}}{Version season key}
-#'   \item{\code{season_name}}{The season name}
 #'   \item{\code{season}}{The season number}
 #'   \item{\code{castaway}}{Name of the castaway}
 #'   \item{\code{finalist}}{The finalists for which a vote can be placed}
@@ -170,7 +199,6 @@
 #' \describe{
 #'   \item{\code{version}}{Country code for the version of the show}
 #'   \item{\code{version_season}}{Version season key}
-#'   \item{\code{season_name}}{The season name}
 #'   \item{\code{season}}{The season number}
 #'   \item{\code{episode}}{Episode number}
 #'   \item{\code{day}}{Day the tribal council took place}
@@ -249,7 +277,6 @@
 #' \describe{
 #'   \item{\code{version}}{Country code for the version of the show}
 #'   \item{\code{version_season}}{Version season key}
-#'   \item{\code{season_name}}{The season name}
 #'   \item{\code{season}}{The season number}
 #'   \item{\code{tribe}}{Tribe name}
 #'   \item{\code{tribe_colour}}{Colour of the tribe}
@@ -262,7 +289,7 @@
 #' library(dplyr)
 #' library(forcats)
 #' df <- tribe_colours %>%
-#'   group_by(season_name) %>%
+#'   group_by(season) %>%
 #'   mutate(
 #'     xmin = 1,
 #'     xmax = 2,
@@ -271,7 +298,6 @@
 #'   ) %>%
 #'   ungroup() %>%
 #'   mutate(
-#'     season_name = fct_reorder(season_name, season),
 #'     font_colour = ifelse(tribe_colour == "#000000", "white", "black")
 #'   )
 #' ggplot() +
@@ -282,7 +308,7 @@
 #'     mapping = aes(x = xmin+0.5, y = ymin+0.5, label = tribe),
 #'     colour = df$font_colour) +
 #'   theme_void() +
-#'   facet_wrap(~season_name, scales = "free_y")
+#'   facet_wrap(~season, scales = "free_y")
 "tribe_colours"
 
 #' Viewers
@@ -293,7 +319,6 @@
 #' \describe{
 #'   \item{\code{version}}{Country code for the version of the show}
 #'   \item{\code{version_season}}{Version season key}
-#'   \item{\code{season_name}}{The season name}
 #'   \item{\code{season}}{Season number}
 #'   \item{\code{episode_number_overall}}{The cumulative episode number}
 #'   \item{\code{episode}}{Episode number for the season}
@@ -316,7 +341,6 @@
 #' \describe{
 #'   \item{\code{version}}{Country code for the version of the show}
 #'   \item{\code{version_season}}{Version season key}
-#'   \item{\code{season_name}}{The season name}
 #'   \item{\code{season}}{Season number}
 #'   \item{\code{episode_number_overall}}{The cumulative episode number}
 #'   \item{\code{episode}}{Episode number for the season}
@@ -340,7 +364,6 @@
 #' \describe{
 #'   \item{\code{version}}{Country code for the version of the show}
 #'   \item{\code{version_season}}{Version season key}
-#'   \item{\code{season_name}}{The season name}
 #'   \item{\code{season}}{The season number}
 #'   \item{\code{palette}}{The season palette}
 #' }
@@ -355,7 +378,6 @@
 #' \describe{
 #'   \item{\code{version}}{Country code for the version of the show}
 #'   \item{\code{version_season}}{Version season key}
-#'   \item{\code{season_name}}{The season name}
 #'   \item{\code{season}}{The season number}
 #'   \item{\code{episode}}{Episode number}
 #'   \item{\code{n_boots}}{The number of boots that there have been in the game e.g. if `n_boots == 2` there have been 2
@@ -393,7 +415,6 @@
 #' \describe{
 #'   \item{\code{version}}{Country code for the version of the show}
 #'   \item{\code{version_season}}{Version season key}
-#'   \item{\code{season_name}}{The season name}
 #'   \item{\code{season}}{The season number}
 #'   \item{\code{episode}}{Episode number}
 #'   \item{\code{challenge_id}}{Primary key}
@@ -477,7 +498,6 @@
 #' \describe{
 #'   \item{\code{version}}{Country code for the version of the show}
 #'   \item{\code{version_season}}{Version season key}
-#'   \item{\code{season_name}}{The season name}
 #'   \item{\code{season}}{The season number}
 #'   \item{\code{episode}}{Episode number}
 #'   \item{\code{day}}{The day of the tribal council}
@@ -506,7 +526,6 @@
 #' \describe{
 #'   \item{\code{version}}{Country code for the version of the show}
 #'   \item{\code{version_season}}{Version season key}
-#'   \item{\code{season_name}}{The season name}
 #'   \item{\code{season}}{The season number}
 #'   \item{\code{episode}}{Episode number}
 #'   \item{\code{order}}{The number of boots that there have been in the game e.g. if `order == 2` there have been 2
@@ -538,15 +557,14 @@
 #' \describe{
 #'   \item{\code{version}}{Country code for the version of the show}
 #'   \item{\code{version_season}}{Version season key}
-#'   \item{\code{season_name}}{The season name}
 #'   \item{\code{season}}{The season number}
 #'   \item{\code{episode}}{Episode number}
 #'   \item{\code{castaway}}{Name of the castaway}
 #'   \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano. The first two letters reference the country of the version played e.g. US, AU.}
 #'   \item{\code{confessional_count}}{The count of confessionals for the castaway during the episode}
 #'   \item{\code{confessional_time}}{The total time for all confessionals for the episode for each castaway}
-#'   \item{\code{index_count}}{The index based on the confessional counts. See details.}
-#'   \item{\code{index_time}}{The index based on the confessional time. See details.}
+#'   \item{\code{exp_count}}{The expected confessional counts. See details.}
+#'   \item{\code{exp_time}}{The expected confessional time. See details.}
 #' }
 #'
 #' @details Confessional data has been counted by contributors of the survivoR R package and consolidated
@@ -561,10 +579,10 @@
 #'
 #' In the case of recap episodes, this episode is left blank.
 #'
-#' The indexes are a measure of how many more confessional counts or time the castaway has received given the point in the game.
-#' For example a `index_count` of 1 implies the castaway has received the expected number of confessionals given equal share within tribe.
-#' An index of 1.5 implies have have received 50% more. The measure is standardised within tribe since the tribe that goes to tribal
-#' typically receives more confessionals for the episode. Makes sense. `index_time` is the same but using time instead of counts.
+#' The fields `exp_count` and `exp_time` are the expected values given the game events. For example players that attend
+#' tribal council, find advantages, go on rewards, and if it's their boot episode typically get more confessionals - we
+#' should expect them to get more as well. This enables analysis of the observed and expected confessionals and those
+#' that received more or fewer than expected.
 #'
 #' If you also count confessionals, please get in touch and I'll add them into the package.
 "confessionals"
@@ -579,7 +597,6 @@
 #' \describe{
 #'   \item{\code{version}}{Country code for the version of the show}
 #'   \item{\code{version_season}}{Version season key}
-#'   \item{\code{season_name}}{The season name}
 #'   \item{\code{season}}{The season number}
 #'   \item{\code{castaway}}{Name of the castaway involved in the event e.g. found, played, received, etc.}
 #'   \item{\code{castaway_id}}{ID of the castaway (primary key). Consistent across seasons and name changes e.g. Amber Brkich / Amber Mariano. The first two letters reference the country of the version played e.g. US, AU.}
@@ -592,6 +609,7 @@
 #'   \item{\code{played_for_id}}{the ID for who the advantage or idol was played for}
 #'   \item{\code{success}}{If the play was successful or not. Only relevant for advantages since playing a hidden immunity idol is always successful in terms of saving who it was played for.}
 #'   \item{\code{votes_nullified}}{In the case of hidden immunity idols this is the count of how many votes were nullified when played}
+#'   \item{\code{sog_id}}{Stage of game ID for joining to \code{vote_history} and \code{challenge_results}}
 #' }
 "advantage_movement"
 
@@ -603,7 +621,6 @@
 #' \describe{
 #'   \item{\code{version}}{Country code for the version of the show}
 #'   \item{\code{version_season}}{Version season key}
-#'   \item{\code{season_name}}{The season name}
 #'   \item{\code{season}}{The season number}
 #'   \item{\code{advantage_id}}{The ID / primary key of the advantage}
 #'   \item{\code{advantage_type}}{Advantage type e.g. hidden immunity idol, extra vote, steal a vote, etc}
@@ -667,7 +684,6 @@
 #' \describe{
 #'   \item{\code{version}}{Country code for the version of the show}
 #'   \item{\code{version_season}}{Version season key}
-#'   \item{\code{season_name}}{The season name}
 #'   \item{\code{season}}{The season number}
 #'   \item{\code{episode}}{Episode number}
 #'   \item{\code{n_boots}}{The number of boots so far in the game}
@@ -693,7 +709,6 @@
 #' \describe{
 #'   \item{\code{version}}{Country code for the version of the show}
 #'   \item{\code{version_season}}{Version season key}
-#'   \item{\code{season_name}}{The season name}
 #'   \item{\code{season}}{The season number}
 #'   \item{\code{item}}{Item number}
 #'   \item{\code{item_description}}{Item description}
@@ -770,39 +785,88 @@
 #'   \item{\code{season}}{The season number}
 #'   \item{\code{castaway_id}}{Castaway ID}
 #'   \item{\code{castaway}}{Castaway}
-#'   \item{\code{score_chal_all}}{Challenge score for all challenges}
-#'   \item{\code{score_chal_immunity}}{Challenge score for immunity challenges}
-#'   \item{\code{score_chal_reward}}{Challenge score for reward challenges}
-#'   \item{\code{score_chal_tribal}}{Challenge score for tribals challenges}
-#'   \item{\code{score_chal_tribal_immunity}}{Challenge score for tribal immunity}
-#'   \item{\code{score_chal_tribal_reward}}{Challenge score for tribal reward}
-#'   \item{\code{score_chal_individual}}{Challenge score for individual challenges}
-#'   \item{\code{score_chal_individual_immunity}}{Challenge score for individual immunity}
-#'   \item{\code{score_chal_individual_reward}}{Challenge score for individual reward}
-#'   \item{\code{score_chal_team}}{Challenge score for team challenges}
-#'   \item{\code{score_chal_team_reward}}{Challenge score for team reward}
-#'   \item{\code{score_chal_team_immunity}}{Challenge score for team immunity}
-#'   \item{\code{score_chal_duel}}{Challenge score for duels}
+#'   \item{\code{score_overall}}{Overall score for the castaway. Use this to compare players across seasons}
+#'   \item{\code{score_result}}{Score based on the placing in the season}
+#'   \item{\code{score_jury}}{Jury score based on the proportional number of votes recieved}
+#'   \item{\code{score_vote}}{Voting score for the season as a proportion of their potential max score}
+#'   \item{\code{score_adv}}{Advantage score. Same as \code{p_score_adv}}
+#'   \item{\code{score_inf}}{Influence score. Aim at capturing influence in the game e.g. higher the score,
+#'   the higher their importance to the narrative of the episode/season}
+#'   \item{\code{r_score_chal_all}}{Challenge score for all challenges}
+#'   \item{\code{r_score_chal_immunity}}{Challenge score for immunity challenges}
+#'   \item{\code{r_score_chal_reward}}{Challenge score for reward challenges}
+#'   \item{\code{r_score_chal_tribal}}{Challenge score for tribals challenges}
+#'   \item{\code{r_score_chal_tribal_immunity}}{Challenge score for tribal immunity}
+#'   \item{\code{r_score_chal_tribal_reward}}{Challenge score for tribal reward}
+#'   \item{\code{r_score_chal_individual}}{Challenge score for individual challenges}
+#'   \item{\code{r_score_chal_individual_immunity}}{Challenge score for individual immunity}
+#'   \item{\code{r_score_chal_individual_reward}}{Challenge score for individual reward}
+#'   \item{\code{r_score_chal_team}}{Challenge score for team challenges}
+#'   \item{\code{r_score_chal_team_reward}}{Challenge score for team reward}
+#'   \item{\code{r_score_chal_team_immunity}}{Challenge score for team immunity}
+#'   \item{\code{r_score_chal_duel}}{Challenge score for duels}
+#'   \item{\code{p_score_chal_all}}{Challenge score for all challenges}
+#'   \item{\code{p_score_chal_immunity}}{Challenge score for immunity challenges}
+#'   \item{\code{p_score_chal_reward}}{Challenge score for reward challenges}
+#'   \item{\code{p_score_chal_tribal}}{Challenge score for tribals challenges}
+#'   \item{\code{p_score_chal_tribal_immunity}}{Challenge score for tribal immunity}
+#'   \item{\code{p_score_chal_tribal_reward}}{Challenge score for tribal reward}
+#'   \item{\code{p_score_chal_individual}}{Challenge score for individual challenges}
+#'   \item{\code{p_score_chal_individual_immunity}}{Challenge score for individual immunity}
+#'   \item{\code{p_score_chal_individual_reward}}{Challenge score for individual reward}
+#'   \item{\code{p_score_chal_team}}{Challenge score for team challenges}
+#'   \item{\code{p_score_chal_team_reward}}{Challenge score for team reward}
+#'   \item{\code{p_score_chal_team_immunity}}{Challenge score for team immunity}
+#'   \item{\code{p_score_chal_duel}}{Challenge score for duels}
 #'   \item{\code{n_votes_received}}{Number of votes received}
 #'   \item{\code{n_successful_boots}}{Number of successful boots}
 #'   \item{\code{p_successful_boot}}{Percentage of successful boots. Tribals where the castaway did not have a vote are removed from the calculation}
 #'   \item{\code{n_tribals}}{Number of tribals attended}
 #'   \item{\code{n_tribals_with_vote}}{Number of tribals attended where the player had a vote}
-#'   \item{\code{score_vote}}{Vote history score}
-#'   \item{\code{score_adv}}{Advantage scores}
+#'   \item{\code{r_score_vote}}{Vote history score}
+#'   \item{\code{p_score_vote}}{Proportional vote history score for the season}
+#'   \item{\code{r_score_adv}}{Advantage scores}
+#'   \item{\code{p_score_adv}}{Scaled advantage scores - min max bewtween 0 and 1}
 #'   \item{\code{n_adv_found}}{Number of advantages found}
 #'   \item{\code{n_idols_found}}{number of idols found}
-#'   \item{\code{n_voted_out_with_adv}}{Number of advantages they were voted out with}
-#'   \item{\code{n_voted_out_with_idol}}{Number of idols they were voted out with}
 #'   \item{\code{n_adv_played}}{Number of advantages played}
 #'   \item{\code{n_adv_not_played}}{Number of advantages not played}
+#'   \item{\code{n_voted_out_with_adv}}{Number of advantages they were voted out with}
+#'   \item{\code{n_voted_out_with_idol}}{Number of idols they were voted out with}
 #' }
 #'
 #' @details
 #' Challenge score: \url{https://gradientdescending.com/the-sanctuary/full-challenges-list-all.html#details}
+#'
+#' The difference between the `r_` and `p_` sores is the `r_` is the raw score which is the residual assuming equal probability. Higher the better.
+#' `p_` is the residual converted to a probability.
 #'
 #' Vote history score: \url{https://gradientdescending.com/the-sanctuary/full-vote-list.html#details}. The vote history score is somewhat experimental.
 #'
 #' Advantage score: TBC
 #'
 "castaway_scores"
+
+
+#' Journeys
+#'
+#' Details on who went on Journeys, what they won or if they lost their vote.
+#'
+#' @format This data frame contains the following columns:
+#' \describe{
+#'   \item{\code{version}}{Country code for the version of the show}
+#'   \item{\code{version_season}}{Version season key}
+#'   \item{\code{season}}{The season number}
+#'   \item{\code{episode}}{Episode}
+#'   \item{\code{sog_id}}{Stage of game ID}
+#'   \item{\code{castaway_id}}{Castaway ID}
+#'   \item{\code{castaway}}{Castaway}
+#'   \item{\code{reward}}{The thing they won (or lost)}
+#'   \item{\code{lost_vote}}{Logical. If they lost their vote}
+#'   \item{\code{game_played}}{The game they played on the journey}
+#'   \item{\code{chose_to_play}}{If they chose to play or not}
+#'   \item{\code{event}}{The event that occured e.g. risked vote, lost vote}
+#' }
+#'
+#'
+"journeys"
