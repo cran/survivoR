@@ -38,6 +38,7 @@ paste_tribble <- function(df) {
     }
     cat(cell, "\n")
   }
+
 }
 
 # VOTE HISTORY ------------------------------------------------------------
@@ -143,7 +144,7 @@ test_that("📜 5. Winners on challenge_results match immunity on vote_history",
       is.na(immunity)
     ) |>
     nrow() |>
-    expect_equal(34)
+    expect_equal(35)
     # This might need checking
 
 })
@@ -992,8 +993,11 @@ test_that("🧑 9. Full name is the same as on castaway details", {
     'US24', 'Kim Spradlin',
     'US45', 'Bruce Perreault',
     'AU08', 'Shonee Bowtell',
+    'AU11', 'Shonee Bowtell',
     'SA07', 'Dante de Villiers',
-    'UK01', 'Uzma Bashir'
+    'UK01', 'Uzma Bashir',
+    'AU11', 'Lisa Holmes',
+    'AU11', 'Rob Bentele'
   )
 
   castaways |>
