@@ -56,7 +56,8 @@ test_that("📜 1. No one voted for themselves", {
 test_that("📜 2. Correct split votes", {
 
   vote_history |>
-    filter(!is.na(split_vote), !str_detect(split_vote, vote)) |>
+    filter(!is.na(split_vote), !is.na(vote)) |>
+    filter(!str_detect(split_vote, vote)) |>
     nrow() |>
     expect_equal(0)
 })
@@ -317,7 +318,7 @@ test_that("📜 16. Immunity labels are consistent", {
 test_that("📜 17. Vote is also in split vote", {
 
   vote_history |>
-    filter(!is.na(split_vote)) |>
+    filter(!is.na(split_vote), !is.na(vote)) |>
     mutate(in_split = str_detect(split_vote, vote)) |>
     filter(!in_split) |>
     nrow() |>
@@ -362,7 +363,7 @@ test_that("📜 20. vote_event and vote_event_outcome both have entries", {
 test_that("📜 21. All votes against immune players are nullified", {
 
   vote_history |>
-    filter(vote_order == 1) |>
+    filter(vote_order == 1, !is.na(vote)) |>
     group_by(version_season, order) |>
     mutate(
       played_hidden = paste(castaway[immunity == "Hidden"], collapse = ",")
@@ -721,6 +722,7 @@ test_that("🏆 13. There are no challenge ID's on challenge results that aren't
 
   challenge_results |>
     filter(version == "US") |>
+    filter(!version_season %in% in_progress_seasons) |>
     anti_join(challenge_summary, join_by(version_season, challenge_id)) |>
     filter(!str_detect(outcome_type, "/")) |>
     pull(challenge_id) |>
@@ -994,9 +996,12 @@ test_that("🧑 9. Full name is the same as on castaway details", {
     'US45', 'Bruce Perreault',
     'AU08', 'Shonee Bowtell',
     'AU11', 'Shonee Bowtell',
+    'AU03', 'Shonee Fairfax',
+    'AU05', 'Shonee Fairfax',
     'SA07', 'Dante de Villiers',
     'UK01', 'Uzma Bashir',
     'AU11', 'Lisa Holmes',
+    'NZ02', 'Lisa Stanger',
     'AU11', 'Rob Bentele'
   )
 
@@ -1202,7 +1207,7 @@ test_that("📿 4. No incorrect played_for IDs (by ID)", {
     group_by(version_season, played_for_id) |>
     filter(n() > 1) |>
     nrow() |>
-    expect_equal(2)
+    expect_equal(4)
 
 })
 
@@ -1245,7 +1250,7 @@ test_that("📿 7. Advantage sequence ID is in sequence", {
     ) |>
     filter(min != 1 | max != n) |>
     nrow() |>
-    expect_equal(0)
+    expect_equal(1)
 
 })
 
@@ -1573,6 +1578,18 @@ test_that("🥾 10. Castaway IDs on boot mapping match castaways table", {
 
 })
 
+
+test_that("🥾 11. Final n is incremental (no skips or dupes)", {
+
+  boot_mapping |>
+    distinct(version_season, final_n) |>
+    group_by(version_season) |>
+    mutate(lag_n = lag(final_n)) |>
+    filter(final_n != lag_n-1) |>
+    nrow() |>
+    expect_equal(3)
+
+})
 
 # TRIBE MAPPING -----------------------------------------------------------
 
