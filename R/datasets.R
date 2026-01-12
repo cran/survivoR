@@ -397,6 +397,14 @@
 #'   \item{\code{sit_out}}{\code{TRUE} if they sat out of the challenge or \code{FALSE} if they participate}
 #'   \item{\code{team}}{Team allocation when they are split into teams}
 #'   \item{\code{sog_id}}{Stage of game ID for joining to \code{boot_mapping} and \code{vote_history}}
+#'   \item{\code{won}}{If they won the challenge for any of the success critera e.g. in a Team / Individual challenge where there is a team reward and individual immunity, if they only won team reward then `won = 1`}
+#'   \item{\code{won_tribal_reward}}{1 if the player won tribal reward, 0 otherwise}
+#'   \item{\code{won_tribal_immunity}}{1 if the player won tribal immunity, 0 otherwise}
+#'   \item{\code{won_team_reward}}{1 if the player won team reward, 0 otherwise}
+#'   \item{\code{won_team_immunity}}{1 if the player won team immunity, 0 otherwise}
+#'   \item{\code{won_individual_reward}}{1 if the player won indivudal reward, 0 otherwise}
+#'   \item{\code{won_individual_immunity}}{1 if the player won individual immunity, 0 otherwise}
+#'   \item{\code{won_duel}}{1 if the player won the duel, 0 otherwise}
 #' }
 #'
 #' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)}  \url{https://survivor.fandom.com/wiki/Main_Page}
@@ -424,6 +432,8 @@
 #'   \item{\code{recurring_name}}{Challenges can go by different names but are often associated with a particular challenge or element
 #'   of a challenge. Some challenges use combinations of other challenges so it's not perfect but consistent with the wiki page.
 #'   Use \code{recurring_name} to analyse how often a challenge has been run.}
+#'   \item{\code{all_names}}{Some challenges go by multiple names or there are two distinct challenges in the same challenge e.g. Eve 6 often has two parts,
+#'   an obstacle course and Chimney Sweep. This lists all the challenges. Use this field to search for all the times a challenge has run.}
 #'   \item{\code{description}}{Description of the challenge}
 #'   \item{\code{reward}}{Description of the reward}
 #'   \item{\code{additional_stipulation}}{Some challenges come with various rules or success criteria. This states those conditions.}
@@ -762,7 +772,8 @@
 #'   \item{\code{n_entities}}{Number of entities competing for the win e.g. the number of tribes, teams, or people.}
 #'   \item{\code{n_winners}}{Number of winners (or winning entities) e.g. if there are two tribes there is only one winning tribe, if there
 #'   are three tribes like the new era there are two winning tribes and one that goes to tribal council.}
-#'   \item{\code{won}}{number of challenges won}
+#'   \item{\code{won}}{Challenges won}
+#'   \item{\code{sog_id}}{Stage of game id}
 #' }
 #'
 #' @source \url{https://en.wikipedia.org/wiki/Survivor_(American_TV_series)} \url{https://survivor.fandom.com/wiki/Main_Page}

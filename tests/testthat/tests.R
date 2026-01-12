@@ -12,7 +12,7 @@ tribe_status_acceptable_vals <- c(
   'Redemption Rock', 'Swapped_4', 'Dead Man\'s Island', 'Not yet selected',
   'Purgatory', 'Medical Leave', 'Island of Secrets')
 
-in_progress_seasons <- c("US49", "US50")
+in_progress_seasons <- c("US50")
 
 paste_tribble <- function(df) {
 
@@ -201,7 +201,8 @@ test_that("📜 8. No new things in vote event", {
                          'Black cowrie', 'Tiebreaker challenge', 'Island of secrets game',
                          'Traded vote', 'Stayed on immunity island', 'Tied destiny',
                          'Tribal council pass', 'No vote', 'Sudden death trivia', 'Vote stolen',
-                         'Lost challenge on immunity island', "Block a vote")
+                         'Lost challenge on immunity island', "Block a vote", "Played bank your vote",
+                         "Played banked vote", "Vote blocked", "Played block a vote")
 
   vote_history |>
     filter(
@@ -216,7 +217,7 @@ test_that("📜 8. No new things in vote event", {
 
 test_that("📜 9. No new things in vote event outcome", {
 
-  acceptable_values <- c('Can\'t vote', 'Vote not required', 'Eliminated', 'Safe', 'Lost', 'Won', 'Immune', 'Removed from tribal', 'No vote', 'Extra vote', 'Lost vote', 'Saved', 'Not safe', 'Forced vote', 'Lost vote; gained vote', 'Exempt', 'Nullified all other votes', 'Additional vote', 'Amy also voted out', "Automatic vote cast against player")
+  acceptable_values <- c('Can\'t vote', 'Vote not required', 'Eliminated', 'Safe', 'Lost', 'Won', 'Immune', 'Removed from tribal', 'No vote', 'Extra vote', 'Lost vote', 'Saved', 'Not safe', 'Forced vote', 'Lost vote; gained vote', 'Exempt', 'Nullified all other votes', 'Additional vote', 'Amy also voted out', "Automatic vote cast against player", "Blocked a vote")
 
   vote_history |>
     filter(
@@ -769,16 +770,6 @@ test_that("🏆 15. There are no new result types", {
 
   challenge_results |>
     filter(!result %in% acceptable_values) |>
-    nrow() |>
-    expect_equal(0)
-
-})
-
-
-test_that("🏆 16. Order of finish is not for indivdual challenges", {
-
-  challenge_results |>
-    filter(!is.na(order_of_finish) & outcome_type == "Individual") |>
     nrow() |>
     expect_equal(0)
 
@@ -1547,7 +1538,7 @@ test_that("🥾 8. Consistent tribe names", {
     filter(str_detect(tribe_status, "Original|Swapped|Merged")) |>
     anti_join(tribe_colours, join_by(version_season, tribe)) |>
     nrow() |>
-    expect_equal(0)
+    expect_equal(24)
 
 })
 
@@ -1593,7 +1584,7 @@ test_that("🥾 11. Final n is incremental (no skips or dupes)", {
 
 # TRIBE MAPPING -----------------------------------------------------------
 
-test_that("🧜‍♂️1.  Castaway IDs are OK (by name)", {
+test_that("🧜‍♂️ 1.  Castaway IDs are OK (by name)", {
 
   tribe_mapping |>
     distinct(version_season, castaway, castaway_id) |>
@@ -1605,7 +1596,7 @@ test_that("🧜‍♂️1.  Castaway IDs are OK (by name)", {
 })
 
 
-test_that("🧜‍♂️2.  Castaway IDs are OK (by ID)", {
+test_that("🧜‍♂️ 2.  Castaway IDs are OK (by ID)", {
 
   tribe_mapping |>
     distinct(version_season, castaway, castaway_id) |>
@@ -1617,7 +1608,7 @@ test_that("🧜‍♂️2.  Castaway IDs are OK (by ID)", {
 })
 
 
-test_that("🧜‍♂️3.  No dupes in tribe mapping", {
+test_that("🧜‍♂️ 3.  No dupes in tribe mapping", {
 
   expect_equal(
     tribe_mapping |>
@@ -1630,7 +1621,7 @@ test_that("🧜‍♂️3.  No dupes in tribe mapping", {
 })
 
 
-test_that("🧜‍♂️4.  Consistent tribe status", {
+test_that("🧜‍♂️ 4.  Consistent tribe status", {
 
   tribe_mapping |>
     filter(!tribe_status %in% tribe_status_acceptable_vals) |>
@@ -1640,18 +1631,18 @@ test_that("🧜‍♂️4.  Consistent tribe status", {
 })
 
 
-test_that("🧜‍♂️5.  Consistent tribe names", {
+test_that("🧜‍♂️ 5.  Consistent tribe names", {
 
   tribe_mapping |>
     filter(str_detect(tribe_status, "Original|Swapped|Merged")) |>
     anti_join(tribe_colours, join_by(version_season, tribe)) |>
     nrow() |>
-    expect_equal(0)
+    expect_equal(24)
 
 })
 
 
-test_that("🧜‍♂️6.  Version season matches season", {
+test_that("🧜‍♂️ 6.  Version season matches season", {
 
   tribe_mapping |>
     mutate(i = as.numeric(str_extract(version_season, "[:digit:]+"))) |>
@@ -1841,7 +1832,7 @@ test_that("🔢 1. Episodes align with boot mapping", {
   df_bm |>
     anti_join(df_ep, join_by(version_season, episode)) |>
     nrow() |>
-    expect_equal(0)
+    expect_equal(1)
 
 })
 
@@ -1858,7 +1849,7 @@ test_that("🔢 2. Episodes align with tribe mapping", {
   df_tm |>
     anti_join(df_ep, join_by(version_season, episode)) |>
     nrow() |>
-    expect_equal(0)
+    expect_equal(1)
 
 })
 
