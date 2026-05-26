@@ -8,6 +8,7 @@
 #'   \item{\code{version_season}}{Version season key}
 #'   \item{\code{season}}{Season number}
 #'   \item{\code{season_name}}{Season name}
+#'   \item{\code{description}}{Season description}
 #'   \item{\code{n_cast}}{Number of cast in the season}
 #'   \item{\code{n_tribes}}{Number of starting tribes}
 #'   \item{\code{n_finalists}}{Number of finalists}
@@ -439,7 +440,7 @@
 #'   \item{\code{additional_stipulation}}{Some challenges come with various rules or success criteria. This states those conditions.}
 #'   \item{\code{race}}{If the challenge is a race between tribes, teams or individuals}
 #'   \item{\code{endurance}}{If the challenge is an endurance event e.g. last tribe, team, individual standing}
-#'   \item{\code{turn_based}}{If the challenge is turn bases i.e. conducted in rounds}
+#'   \item{\code{rounds}}{If the challenge is turn bases i.e. conducted in rounds}
 #'   \item{\code{puzzle}}{If the challenge contains a puzzle element}
 #'   \item{\code{puzzle_slide}}{If the challenge contained a slide puzzle}
 #'   \item{\code{puzzle_word}}{If the challenge contained a word puzzle}
@@ -471,6 +472,7 @@
 #'   \item{\code{obstacle_knots}}{If the challenge involved untying knots}
 #'   \item{\code{obstacle_padlocks}}{If the challenge featured opening padlocks}
 #'   \item{\code{mud}}{If the challenge required castaways to get covered in mud}
+#'   \item{\code{maze}}{If the challenge involve some sort of maze}
 #' }
 #'
 #' @details This data set contains the name, description, and descriptive features for each
@@ -575,6 +577,8 @@
 #'   \item{\code{confessional_time}}{The total time for all confessionals for the episode for each castaway}
 #'   \item{\code{exp_count}}{The expected confessional counts. See details.}
 #'   \item{\code{exp_time}}{The expected confessional time. See details.}
+#'   \item{\code{index_count}}{The proportional difference between the observed and expected count.}
+#'   \item{\code{index_time}}{The proportional difference between the observed and expected time.}
 #' }
 #'
 #' @details Confessional data has been counted by contributors of the survivoR R package and consolidated
@@ -801,11 +805,16 @@
 #'   \item{\code{score_outplay}}{Outplay score}
 #'   \item{\code{score_outlast}}{Outlast score}
 #'   \item{\code{score_result}}{Score based on the placing in the season}
+#'   \item{\code{score_challenge}}{Score based on challenge success}
 #'   \item{\code{score_jury}}{Jury score based on the proportional number of votes recieved}
 #'   \item{\code{score_vote}}{Voting score for the season as a proportion of their potential max score}
 #'   \item{\code{score_adv}}{Advantage score. Same as \code{p_score_adv}}
-#'   \item{\code{score_inf}}{Influence score. Aim at capturing influence in the game e.g. higher the score,
-#'   the higher their importance to the narrative of the episode/season}
+#'   \item{\code{score_inf}}{Influence score. Aim at capturing influence in the game e.g. higher the score, the higher their importance to the narrative of the episode/season}
+#'   \item{\code{threat_challenge}}{Challenge threat score. Baseline is 100. Higher is better.}
+#'   \item{\code{threat_challenge_cat}}{Challenge threat score positioning.}
+#'   \item{\code{threat_strategic}}{Strategic threat score. Baseline is 100. Higher is better.}
+#'   \item{\code{threat_strategic_cat}}{Strategic threat score positioning.}
+#'   \item{\code{r_score_challenge}}{Challenge score for all challenges with weighting}
 #'   \item{\code{r_score_chal_all}}{Challenge score for all challenges}
 #'   \item{\code{r_score_chal_immunity}}{Challenge score for immunity challenges}
 #'   \item{\code{r_score_chal_reward}}{Challenge score for reward challenges}
@@ -819,6 +828,7 @@
 #'   \item{\code{r_score_chal_team_reward}}{Challenge score for team reward}
 #'   \item{\code{r_score_chal_team_immunity}}{Challenge score for team immunity}
 #'   \item{\code{r_score_chal_duel}}{Challenge score for duels}
+#'   \item{\code{p_score_challenge}}{Challenge score for all challenges with weighting}
 #'   \item{\code{p_score_chal_all}}{Challenge score for all challenges}
 #'   \item{\code{p_score_chal_immunity}}{Challenge score for immunity challenges}
 #'   \item{\code{p_score_chal_reward}}{Challenge score for reward challenges}
@@ -832,21 +842,16 @@
 #'   \item{\code{p_score_chal_team_reward}}{Challenge score for team reward}
 #'   \item{\code{p_score_chal_team_immunity}}{Challenge score for team immunity}
 #'   \item{\code{p_score_chal_duel}}{Challenge score for duels}
-#'   \item{\code{n_votes_received}}{Number of votes received}
-#'   \item{\code{n_successful_boots}}{Number of successful boots}
-#'   \item{\code{p_successful_boot}}{Percentage of successful boots. Tribals where the castaway did not have a vote are removed from the calculation}
-#'   \item{\code{n_tribals}}{Number of tribals attended}
-#'   \item{\code{n_tribals_with_vote}}{Number of tribals attended where the player had a vote}
 #'   \item{\code{r_score_vote}}{Vote history score}
 #'   \item{\code{p_score_vote}}{Proportional vote history score for the season}
-#'   \item{\code{r_score_adv}}{Advantage scores}
-#'   \item{\code{p_score_adv}}{Scaled advantage scores - min max bewtween 0 and 1}
-#'   \item{\code{n_adv_found}}{Number of advantages found}
-#'   \item{\code{n_idols_found}}{number of idols found}
-#'   \item{\code{n_adv_played}}{Number of advantages played}
-#'   \item{\code{n_adv_not_played}}{Number of advantages not played}
-#'   \item{\code{n_voted_out_with_adv}}{Number of advantages they were voted out with}
-#'   \item{\code{n_voted_out_with_idol}}{Number of idols they were voted out with}
+#'   \item{\code{r_score_adv}}{Advantage score}
+#'   \item{\code{p_score_adv}}{Scaled advantage score - min max bewtween 0 and 1}
+#'   \item{\code{r_score_inf}}{Influence score}
+#'   \item{\code{p_score_inf}}{Scaled influence score - min max bewtween 0 and 1}
+#'   \item{\code{r_score_jury}}{Jury score}
+#'   \item{\code{p_score_jury}}{Scaled jury score - min max bewtween 0 and 1}
+#'   \item{\code{r_score_result}}{Result score}
+#'   \item{\code{p_score_result}}{Scaled result score - min max bewtween 0 and 1}
 #' }
 #'
 #' @details
@@ -878,5 +883,27 @@
 #'   \item{\code{event}}{The event that occured e.g. risked vote, lost vote}
 #' }
 #'
-#'
 "journeys"
+
+
+#' Advantage Timeline
+#'
+#' A long format table to show who was holding which advantage/idol at what stage
+#' of the game (`sog_id`). This table makes it simple to perform analysis on
+#' advantages throughout the game.
+#'
+#' @format This data frame contains the following columns:
+#' \describe{
+#'   \item{\code{version}}{Country code for the version of the show}
+#'   \item{\code{season}}{The season number}
+#'   \item{\code{version_season}}{Version season key}
+#'   \item{\code{episode}}{Episode}
+#'   \item{\code{sog_id}}{Stage of game ID}
+#'   \item{\code{castaway_id}}{Castaway ID}
+#'   \item{\code{castaway}}{Castaway}
+#'   \item{\code{advantage_id}}{The `advantage_id` key to map to the other `advantage_*` tables}
+#'   \item{\code{final_n}}{FInal n players}
+#'   \item{\code{holding}}{1 if the player is holding the advantage at this stage of the game}
+#' }
+#'
+"advantage_timeline"

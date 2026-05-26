@@ -25,7 +25,7 @@ an obstacle course and Chimney Sweep. This lists all the challenges. Use this fi
 \item{\code{additional_stipulation}}{Some challenges come with various rules or success criteria. This states those conditions.}
 \item{\code{race}}{If the challenge is a race between tribes, teams or individuals}
 \item{\code{endurance}}{If the challenge is an endurance event e.g. last tribe, team, individual standing}
-\item{\code{turn_based}}{If the challenge is turn bases i.e. conducted in rounds}
+\item{\code{rounds}}{If the challenge is turn bases i.e. conducted in rounds}
 \item{\code{puzzle}}{If the challenge contains a puzzle element}
 \item{\code{puzzle_slide}}{If the challenge contained a slide puzzle}
 \item{\code{puzzle_word}}{If the challenge contained a word puzzle}
@@ -57,6 +57,7 @@ the player balancing an object on something e.g. The Ball Drop}
 \item{\code{obstacle_knots}}{If the challenge involved untying knots}
 \item{\code{obstacle_padlocks}}{If the challenge featured opening padlocks}
 \item{\code{mud}}{If the challenge required castaways to get covered in mud}
+\item{\code{maze}}{If the challenge involve some sort of maze}
 }
 }
 \source{
